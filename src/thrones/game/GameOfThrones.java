@@ -494,7 +494,7 @@ public class GameOfThrones extends CardGame {
 			  seed = new Random().nextInt(); // so randomise
         }
         */
-        GameOfThrones.seed = 130006;
+        GameOfThrones.seed = 130007;
         System.out.println("Seed = " + seed);
         GameOfThrones.random = new Random(seed);
         new GameOfThrones();
