@@ -39,7 +39,6 @@ public class GameOfThrones extends CardGame {
     public enum Rank {
         // Reverse order of rank importance (see rankGreater() below)
         // Order of cards is tied to card images
-        ACE(1),
         KING(10),
         QUEEN(10),
         JACK(10),
