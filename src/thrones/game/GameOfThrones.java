@@ -124,11 +124,18 @@ public class GameOfThrones extends CardGame {
     }
 
     //        TODO experimental
-    private Player[] playerz = {
-            new RandomPlayer(0),
-            new RandomPlayer(1),
-            new RandomPlayer(2),
-            new RandomPlayer(3)
+//    private Player[] players = {
+//            new RandomPlayer(0),
+//            new RandomPlayer(1),
+//            new RandomPlayer(2),
+//            new RandomPlayer(3)
+//    };
+
+    private Player[] players = {
+            new SimplePlayer(0),
+            new SimplePlayer(1),
+            new SimplePlayer(2),
+            new SimplePlayer(3)
     };
 
     private final String version = "1.0";
@@ -380,17 +387,11 @@ public class GameOfThrones extends CardGame {
 //            }
 
 //            TODO set current player
-            playerz[playerIndex].updateState(hands[playerIndex], piles);
-            selected = playerz[playerIndex].getBestCard();
-
-//            TODO delete me!!
-//            testPlayer.updateState(hands[playerIndex], piles);
-//            Optional<Card> testCard = testPlayer.getBestCard();
-//            System.out.println(testCard);
-//            playerz
+            players[playerIndex].updateState(hands[playerIndex], piles);
+            selected = players[playerIndex].getBestCard();
 
 //            int pileIndex = playerIndex % 2;
-            int pileIndex = playerz[playerIndex].getPile();
+            int pileIndex = players[playerIndex].getPile();
             assert selected.isPresent() : " Pass returned on selection of character.";
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
             selected.get().setVerso(false);
@@ -408,20 +409,14 @@ public class GameOfThrones extends CardGame {
             nextPlayer = getPlayerIndex(nextPlayer);
 
 
-            //            TODO delete me!!
-//            testPlayer.updateState(hands[nextPlayer], piles);
-//            Optional<Card> testCard = testPlayer.getBestCard();
-//            System.out.println(testCard);
-
-
             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
 //            if (humanPlayers[nextPlayer]) {
 //                waitForCorrectSuit(nextPlayer, false);
 //            } else {
 //                pickACorrectSuit(nextPlayer, false);
 //            }
-            playerz[nextPlayer].updateState(hands[nextPlayer], piles);
-            selected = playerz[nextPlayer].getBestCard();
+            players[nextPlayer].updateState(hands[nextPlayer], piles);
+            selected = players[nextPlayer].getBestCard();
 
             if (selected.isPresent()) {
                 setStatusText("Selected: " + canonical(selected.get()) + ". Player" + nextPlayer + " select a pile to play the card.");
@@ -430,7 +425,7 @@ public class GameOfThrones extends CardGame {
 //                } else {
 //                    selectRandomPile();
 //                }
-                selectedPileIndex = playerz[nextPlayer].getPile();
+                selectedPileIndex = players[nextPlayer].getPile();
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)

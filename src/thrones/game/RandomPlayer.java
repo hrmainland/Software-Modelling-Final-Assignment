@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RandomPlayer implements Player{
-    private int playerIndex;
+    private final int playerIndex;
     private Optional<Card> bestCard;
     private int pile;
 
@@ -19,19 +19,21 @@ public class RandomPlayer implements Player{
     @Override
     public void updateState(Hand hand, Hand[] piles) {
 //        play heart if one of first two cards
+        int totalCardsPlayed = getTotalCardsPlayed(piles);
+//        play card (is character depends on total cards played)
+        updateBestCard(hand, totalCardsPlayed < 2);
+        setPile(totalCardsPlayed);
+        if (totalCardsPlayed >= 2) {
+            validateMove(piles);
+        }
+    }
+
+    public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
             totalCardsPlayed += pile.getCardList().size();
         }
-//        play card (is character depends on total cards played)
-        setBestCard(hand, totalCardsPlayed < 2);
-
-        if (totalCardsPlayed < 2){
-            pile = playerIndex % 2;
-        }
-        else{
-            setPile();
-        }
+        return totalCardsPlayed;
     }
 
     @Override
@@ -44,7 +46,15 @@ public class RandomPlayer implements Player{
         return pile;
     }
 
-    private void setBestCard(Hand hand, boolean isCharacter) {
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
+
+    public void setBestCard(Optional<Card> bestCard) {
+        this.bestCard = bestCard;
+    }
+
+    private void updateBestCard(Hand hand, boolean isCharacter) {
         List<Card> shortListCards = new ArrayList<>();
         for (int i = 0; i < hand.getCardList().size(); i++) {
             Card card = hand.getCardList().get(i);
@@ -63,7 +73,23 @@ public class RandomPlayer implements Player{
         }
     }
 
-    private void setPile() {
+    private void setPile(int totalCardsPlayed) {
+        if (totalCardsPlayed < 2){
+            pile = playerIndex % 2;
+            return;
+        }
         pile = GameOfThrones.random.nextInt(2);
     }
+
+    private void validateMove(Hand[] piles){
+        if (bestCard.isPresent()){
+            ArrayList<Card> pileCards = piles[pile].getCardList();
+            GameOfThrones.Suit topSuit = (GameOfThrones.Suit) pileCards.get(pileCards.size() - 1).getSuit();
+            GameOfThrones.Suit cardSuit = (GameOfThrones.Suit) bestCard.get().getSuit();
+            if (topSuit.isCharacter() && cardSuit.isMagic()) {
+                bestCard = Optional.empty();
+            }
+        }
+    }
+
 }
