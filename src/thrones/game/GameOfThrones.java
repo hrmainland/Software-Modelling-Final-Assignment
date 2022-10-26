@@ -1,7 +1,6 @@
 package thrones.game;
 
 // Oh_Heaven.java
-
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 
