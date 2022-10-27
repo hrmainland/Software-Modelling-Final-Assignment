@@ -20,10 +20,10 @@ public class GameOfThrones extends CardGame {
     public final int nbStartCards = 9;
     public final int nbPlays = 6;
     public final int nbRounds = 3;
-    private final int handWidth = 400;
     private final int pileWidth = 40;
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
-    private final BattleHandler battleHandler = new BattleHandler(this);
+    private RenderingFacade renderingFacade = new RenderingFacade(this);
+    private final BattleHandler battleHandler = new BattleHandler(renderingFacade);
 
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
 
@@ -139,15 +139,6 @@ public class GameOfThrones extends CardGame {
             assert hands[j].getNumberOfCards() == 12 : " Hand does not have twelve cards.";
         }
     }
-
-
-    private final Location[] handLocations = {
-            new Location(350, 625),
-            new Location(75, 350),
-            new Location(350, 75),
-            new Location(625, 350)
-    };
-
     private final Location[] scoreLocations = {
             new Location(575, 675),
             new Location(25, 575),
@@ -182,7 +173,7 @@ public class GameOfThrones extends CardGame {
 
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
-             scores[i] = 0;
+            scores[i] = 0;
             String text = "P" + i + "-0";
             scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
             addActor(scoreActors[i], scoreLocations[i]);
@@ -241,13 +232,7 @@ public class GameOfThrones extends CardGame {
             });
         }
         // graphics
-        RowLayout[] layouts = new RowLayout[nbPlayers];
-        for (int i = 0; i < nbPlayers; i++) {
-            layouts[i] = new RowLayout(handLocations[i], handWidth);
-            layouts[i].setRotationAngle(90 * i);
-            hands[i].setView(this, layouts[i]);
-            hands[i].draw();
-        }
+        renderingFacade.renderhandLayouts(nbPlayers, hands);
         // End graphics
     }
 
