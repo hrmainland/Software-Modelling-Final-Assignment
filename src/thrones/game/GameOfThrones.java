@@ -23,7 +23,7 @@ public class GameOfThrones extends CardGame {
     private final int pileWidth = 40;
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
     private final RenderingFacade renderingFacade = new RenderingFacade(this);
-    private final BattleHandler battleHandler = new BattleHandler(renderingFacade);
+    private final BattleHandler battleHandler = new BattleHandler();
 
     private Actor[] pileTextActors = { null, null };
     private Actor[] scoreActors = {null, null, null, null};
@@ -390,7 +390,10 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
         int[] pile0Ranks = pileHandler.calculatePileRanks(0, piles);
         int[] pile1Ranks = pileHandler.calculatePileRanks(1, piles);
+        renderingFacade.printStartBattleInfo(pile0Ranks, pile1Ranks,piles, ATTACK_RANK_INDEX, DEFENCE_RANK_INDEX);
         battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
+        renderingFacade.updateScores();
+        renderingFacade.setStatusText(battleHandler.getCharacter0Result(), battleHandler.getCharacter1Result());
 
 
         // 5: discarded all cards on the piles
