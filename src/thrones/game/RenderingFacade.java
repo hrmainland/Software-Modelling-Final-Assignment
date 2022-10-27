@@ -6,6 +6,7 @@ package thrones.game;
 import ch.aplu.jcardgame.Hand;
 import ch.aplu.jcardgame.RowLayout;
 import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.TextActor;
 
 public class RenderingFacade {
     GameOfThrones game;
@@ -47,4 +48,11 @@ public class RenderingFacade {
         game.setStatusText(character0Result + " " + character1Result);
     }
 
+    public void notifyPileToRemove(TextActor currentPile) {
+        game.removeActor(currentPile);
+    }
+
+    public void updatePileRankState(int j, int rank, int rank1) {
+        game.updatePileRankState(j, rank, rank1);
+    }
 }
