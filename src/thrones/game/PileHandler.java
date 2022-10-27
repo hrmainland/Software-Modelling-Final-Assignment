@@ -1,4 +1,6 @@
 package thrones.game;
+import ch.aplu.jcardgame.*;
+import ch.aplu.jgamegrid.*;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.CardAdapter;
@@ -8,42 +10,98 @@ import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.TextActor;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * (Pure Fabrication) Responsible for updating the ranks of each pile in the game
  */
 
-/*
 
 public class PileHandler {
     //toAdd:
-    private Hand[] piles;
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
-    private Actor[] pileTextActors = { null, null };
+    private RenderingFacade renderingFacade;
 
+    public PileHandler(RenderingFacade renderingFacade) {
+        this.renderingFacade = renderingFacade;
+    }
 
-    private void updatePileRanks() {
+    public PileHandler() {
+    }
+
+    public void updatePileRanks(Hand[] piles) {
         for (int j = 0; j < piles.length; j++) {
-            int[] ranks = calculatePileRanks(j);
-            updatePileRankState(j, ranks[ATTACK_RANK_INDEX], ranks[DEFENCE_RANK_INDEX]);
+            int[] ranks = calculatePileRanks(j, piles);
+            renderingFacade.updatePileRankState(j, ranks[ATTACK_RANK_INDEX], ranks[DEFENCE_RANK_INDEX]);
         }
     }
 
-    private int[] calculatePileRanks(int pileIndex) {
+    public int[] calculatePileRanks(int pileIndex, Hand[] piles) {
         Hand currentPile = piles[pileIndex];
-        int i = currentPile.isEmpty() ? 0 : ((GameOfThrones.Rank) currentPile.get(0).getRank()).getRankValue();
-        return new int[] { i, i };
+        int attack = 0;
+        int defence = 0;
+        if (currentPile.isEmpty()) {
+            return new int[]{attack,defence};
+        } else {
+            ArrayList<Card> cards = currentPile.getCardList();
+            Card card;
+            Card prevCard;
+            GameOfThrones.Suit prevSuit = null;
+            GameOfThrones.Suit suit;
+            int rankValue = 0;
+            int prevRankValue = 0;
+            for (int i=0; i<cards.size(); i++) {
+                if (i!=0) {
+                    prevCard = currentPile.get(i-1);
+                    prevSuit = ((GameOfThrones.Suit) prevCard.getSuit());
+                    prevRankValue = ((GameOfThrones.Rank) prevCard.getRank()).getRankValue();
+                }
+                card = currentPile.get(i);
+                rankValue = ((GameOfThrones.Rank) card.getRank()).getRankValue();
+                // If ranks are the same, double the effect.
+                rankValue = rankValue==prevRankValue ? 2*rankValue : rankValue;
+                suit = ((GameOfThrones.Suit) card.getSuit());
+                if (suit.isCharacter()) {
+                    attack += rankValue;
+                    defence += rankValue;
+                } else if (suit.isAttack()) {
+                    attack += rankValue;
+                } else if (suit.isDefence()) {
+                    defence += rankValue;
+                } else if (suit.isMagic()) {
+                    // Diamond should never be the bottom card
+                    assert(i!=0);
+                    // Diamond cannot be played after a heart
+                    assert(!prevSuit.isCharacter());
+                    if (prevSuit.isAttack()) {
+                        attack -= rankValue;
+                    } else {
+                        defence -= rankValue;
+                    }
+                }
+                if (attack < 0) {
+                    attack = 0;
+                } if (defence < 0) {
+                    defence = 0;
+                }
+            }
+        }
+        return new int[]{attack, defence};
     }
-
+    /*
     private void updatePileRankState(int pileIndex, int attackRank, int defenceRank) {
         TextActor currentPile = (TextActor) pileTextActors[pileIndex];
-        removeActor(currentPile);
+        //GameGrid.removeActor(currentPile);
+        for (PileObserver observer : observers) {
+            observer.notifyPileToRemove(currentPile);
+        }
         String text = playerTeams[pileIndex] + " Attack: " + attackRank + " - Defence: " + defenceRank;
         pileTextActors[pileIndex] = new TextActor(text, Color.WHITE, bgColor, smallFont);
         addActor(pileTextActors[pileIndex], pileStatusLocations[pileIndex]);
     }
-
+    */
+    /*
     private void resetPile() {
         if (piles != null) {
             for (Hand pile : piles) {
@@ -67,13 +125,6 @@ public class PileHandler {
 
         updatePileRanks();
     }
-    // Method that prints string representations to the console
-    public void battleStrings() {
-        java.lang.System.out.println("piles[0]: " + canonical(piles[0]));
-        System.out.println("piles[0] is " + "Attack: " + pile0Ranks[ATTACK_RANK_INDEX] +
-                " - Defence: " + pile0Ranks[DEFENCE_RANK_INDEX]);
-        System.out.println("piles[1]: " + canonical(piles[1]));
-        System.out.println("piles[1] is " + "Attack: " + pile1Ranks[ATTACK_RANK_INDEX] +
-                " - Defence: " + pile1Ranks[DEFENCE_RANK_INDEX]);
-    }
-}*/
+
+ */
+}
