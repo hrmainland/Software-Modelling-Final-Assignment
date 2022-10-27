@@ -123,26 +123,11 @@ public class GameOfThrones extends CardGame {
         }
     }
 
-    //        TODO experimental
-//    private Player[] players = {
-//            new RandomPlayer(0),
-//            new RandomPlayer(1),
-//            new RandomPlayer(2),
-//            new RandomPlayer(3)
-//    };
-
-    private Player[] players = {
-            new SimplePlayer(0),
-            new SimplePlayer(1),
-            new SimplePlayer(2),
-            new SimplePlayer(3)
-    };
-
     private final String version = "1.0";
     public final int nbPlayers = 4;
     public final int nbStartCards = 9;
-	public final int nbPlays = 6;
-	public final int nbRounds = 3;
+    public final int nbPlays = 6;
+    public final int nbRounds = 3;
     private final int handWidth = 400;
     private final int pileWidth = 40;
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
@@ -187,7 +172,7 @@ public class GameOfThrones extends CardGame {
 
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
-             scores[i] = 0;
+            scores[i] = 0;
             String text = "P" + i + "-0";
             scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
             addActor(scoreActors[i], scoreLocations[i]);
@@ -286,15 +271,12 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < currentHand.getCardList().size(); i++) {
             Card card = currentHand.getCardList().get(i);
             Suit suit = (Suit) card.getSuit();
-//            filter out character or non-character cards
             if (suit.isCharacter() == isCharacter) {
                 shortListCards.add(card);
             }
         }
-//        skip 0.25 of turns or if there are no valid cards
         if (shortListCards.isEmpty() || !isCharacter && random.nextInt(3) == 0) {
             selected = Optional.empty();
-//        select random card
         } else {
             selected = Optional.of(shortListCards.get(random.nextInt(shortListCards.size())));
         }
@@ -379,25 +361,18 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < 2; i++) {
             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
             setStatusText("Player " + playerIndex + " select a Heart card to play");
+            if (humanPlayers[playerIndex]) {
+                waitForCorrectSuit(playerIndex, true);
+            } else {
+                pickACorrectSuit(playerIndex, true);
+            }
 
-//            if (humanPlayers[playerIndex]) {
-//                waitForCorrectSuit(playerIndex, true);
-//            } else {
-//                pickACorrectSuit(playerIndex, true);
-//            }
-
-//            TODO set current player
-            players[playerIndex].updateState(hands[playerIndex], piles);
-            selected = players[playerIndex].getBestCard();
-
-//            int pileIndex = playerIndex % 2;
-            int pileIndex = players[playerIndex].getPile();
+            int pileIndex = playerIndex % 2;
             assert selected.isPresent() : " Pass returned on selection of character.";
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
             selected.get().setVerso(false);
             selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)
             updatePileRanks();
-//            TODO add update method here
         }
 
         // 2: play the remaining nbPlayers * nbRounds - 2
@@ -405,27 +380,21 @@ public class GameOfThrones extends CardGame {
         int nextPlayer = nextStartingPlayer + 2;
 
         while(remainingTurns > 0) {
-
             nextPlayer = getPlayerIndex(nextPlayer);
-
-
             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
-//            if (humanPlayers[nextPlayer]) {
-//                waitForCorrectSuit(nextPlayer, false);
-//            } else {
-//                pickACorrectSuit(nextPlayer, false);
-//            }
-            players[nextPlayer].updateState(hands[nextPlayer], piles);
-            selected = players[nextPlayer].getBestCard();
+            if (humanPlayers[nextPlayer]) {
+                waitForCorrectSuit(nextPlayer, false);
+            } else {
+                pickACorrectSuit(nextPlayer, false);
+            }
 
             if (selected.isPresent()) {
                 setStatusText("Selected: " + canonical(selected.get()) + ". Player" + nextPlayer + " select a pile to play the card.");
-//                if (humanPlayers[nextPlayer]) {
-//                    waitForPileSelection();
-//                } else {
-//                    selectRandomPile();
-//                }
-                selectedPileIndex = players[nextPlayer].getPile();
+                if (humanPlayers[nextPlayer]) {
+                    waitForPileSelection();
+                } else {
+                    selectRandomPile();
+                }
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
