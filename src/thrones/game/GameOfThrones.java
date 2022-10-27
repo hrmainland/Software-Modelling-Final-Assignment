@@ -25,6 +25,27 @@ public class GameOfThrones extends CardGame {
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
     private final BattleHandler battleHandler = new BattleHandler(this);
 
+    private Actor[] pileTextActors = { null, null };
+    private Actor[] scoreActors = {null, null, null, null};
+    private final int watchingTime = 5000;
+    private Hand[] hands;
+    private Hand[] piles;
+    private final String[] playerTeams = { "[Players 0 & 2]", "[Players 1 & 3]"};
+    private int nextStartingPlayer = random.nextInt(nbPlayers);
+
+    private int[] scores = new int[nbPlayers];
+    private Font bigFont = new Font("Arial", Font.BOLD, 36);
+    private Font smallFont = new Font("Arial", Font.PLAIN, 10);
+    // private boolean[] humanPlayers = { true, false, false, false};
+    private boolean[] humanPlayers = { false, false, false, false};
+
+    private Optional<Card> selected;
+    private final int NON_SELECTION_VALUE = -1;
+    private int selectedPileIndex = NON_SELECTION_VALUE;
+    private final int UNDEFINED_INDEX = -1;
+    private final int ATTACK_RANK_INDEX = 0;
+    private final int DEFENCE_RANK_INDEX = 1;
+
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
 
     public enum Suit {
@@ -72,11 +93,32 @@ public class GameOfThrones extends CardGame {
         }
     }
 
+    private final Location[] handLocations = {
+            new Location(350, 625),
+            new Location(75, 350),
+            new Location(350, 75),
+            new Location(625, 350)
+    };
+
+    private final Location[] scoreLocations = {
+            new Location(575, 675),
+            new Location(25, 575),
+            new Location(25, 25),
+            new Location(575, 125)
+    };
+    private final Location[] pileLocations = {
+            new Location(350, 280),
+            new Location(350, 430)
+    };
+    private final Location[] pileStatusLocations = {
+            new Location(250, 200),
+            new Location(250, 520)
+    };
+
     /*
     Canonical String representations of Suit, Rank, Card, and Hand
     */
     String canonical(Suit s) { return s.toString().substring(0, 1); }
-
     String canonical(Rank r) {
         switch (r) {
             case ACE: case KING: case QUEEN: case JACK: case TEN:
@@ -85,15 +127,10 @@ public class GameOfThrones extends CardGame {
                 return String.valueOf(r.getRankValue());
         }
     }
-
     String canonical(Card c) { return canonical((Rank) c.getRank()) + canonical((Suit) c.getSuit()); }
-
     String canonical(Hand h) {
         return "[" + h.getCardList().stream().map(this::canonical).collect(Collectors.joining(",")) + "]";
     }
-
-
-
 
     // Draws a random card from the Hand, based on a random number generator
     public static Card randomCard(Hand hand) {
@@ -140,46 +177,6 @@ public class GameOfThrones extends CardGame {
         }
     }
 
-
-    private final Location[] handLocations = {
-            new Location(350, 625),
-            new Location(75, 350),
-            new Location(350, 75),
-            new Location(625, 350)
-    };
-
-    private final Location[] scoreLocations = {
-            new Location(575, 675),
-            new Location(25, 575),
-            new Location(25, 25),
-            new Location(575, 125)
-    };
-    private final Location[] pileLocations = {
-            new Location(350, 280),
-            new Location(350, 430)
-    };
-    private final Location[] pileStatusLocations = {
-            new Location(250, 200),
-            new Location(250, 520)
-    };
-
-    private Actor[] pileTextActors = { null, null };
-    private Actor[] scoreActors = {null, null, null, null};
-    private final int watchingTime = 5000;
-    private Hand[] hands;
-    private Hand[] piles;
-    private final String[] playerTeams = { "[Players 0 & 2]", "[Players 1 & 3]"};
-    private int nextStartingPlayer = random.nextInt(nbPlayers);
-
-    private int[] scores = new int[nbPlayers];
-
-    Font bigFont = new Font("Arial", Font.BOLD, 36);
-    Font smallFont = new Font("Arial", Font.PLAIN, 10);
-
-    // boolean[] humanPlayers = { true, false, false, false};
-    boolean[] humanPlayers = { false, false, false, false};
-
-
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
              scores[i] = 0;
@@ -209,12 +206,7 @@ public class GameOfThrones extends CardGame {
         System.out.println(playerTeams[0] + " score = " + scores[0] + "; " + playerTeams[1] + " score = " + scores[1]);
     }
 
-    private Optional<Card> selected;
-    private final int NON_SELECTION_VALUE = -1;
-    private int selectedPileIndex = NON_SELECTION_VALUE;
-    private final int UNDEFINED_INDEX = -1;
-    private final int ATTACK_RANK_INDEX = 0;
-    private final int DEFENCE_RANK_INDEX = 1;
+
     private void setupGame() {
         hands = new Hand[nbPlayers];
         for (int i = 0; i < nbPlayers; i++) {
@@ -250,8 +242,6 @@ public class GameOfThrones extends CardGame {
         }
         // End graphics
     }
-
-
 
     private void pickACorrectSuit(int playerIndex, boolean isCharacter) {
         Hand currentHand = hands[playerIndex];
@@ -424,40 +414,7 @@ public class GameOfThrones extends CardGame {
         int[] pile1Ranks = calculatePileRanks(1);
         battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
 
-        /*
-        System.out.println("piles[0]: " + canonical(piles[0]));
-        System.out.println("piles[0] is " + "Attack: " + pile0Ranks[ATTACK_RANK_INDEX] + " - Defence: " + pile0Ranks[DEFENCE_RANK_INDEX]);
-        System.out.println("piles[1]: " + canonical(piles[1]));
-        System.out.println("piles[1] is " + "Attack: " + pile1Ranks[ATTACK_RANK_INDEX] + " - Defence: " + pile1Ranks[DEFENCE_RANK_INDEX]);
-        Rank pile0CharacterRank = (Rank) piles[0].getCardList().get(0).getRank();
-        Rank pile1CharacterRank = (Rank) piles[1].getCardList().get(0).getRank();
-        String character0Result;
-        String character1Result;
 
-        if (pile0Ranks[ATTACK_RANK_INDEX] > pile1Ranks[DEFENCE_RANK_INDEX]) {
-            scores[0] += pile1CharacterRank.getRankValue();
-            scores[2] += pile1CharacterRank.getRankValue();
-            character0Result = "Character 0 attack on character 1 succeeded.";
-        } else {
-            scores[1] += pile1CharacterRank.getRankValue();
-            scores[3] += pile1CharacterRank.getRankValue();
-            character0Result = "Character 0 attack on character 1 failed.";
-        }
-
-        if (pile1Ranks[ATTACK_RANK_INDEX] > pile0Ranks[DEFENCE_RANK_INDEX]) {
-            scores[1] += pile0CharacterRank.getRankValue();
-            scores[3] += pile0CharacterRank.getRankValue();
-            character1Result = "Character 1 attack on character 0 succeeded.";
-        } else {
-            scores[0] += pile0CharacterRank.getRankValue();
-            scores[2] += pile0CharacterRank.getRankValue();
-            character1Result = "Character 1 attack character 0 failed.";
-        }
-        updateScores();
-        System.out.println(character0Result);
-        System.out.println(character1Result);
-        setStatusText(character0Result + " " + character1Result);
-        */
         // 5: discarded all cards on the piles
         nextStartingPlayer += 1;
         delay(watchingTime);
