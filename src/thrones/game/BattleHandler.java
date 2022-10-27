@@ -15,14 +15,14 @@ public class BattleHandler {
     private String character0Result;
     private String character1Result;
 
-    //PileHandler pileHandler;
+    public BattleHandler() {}
 
-    public BattleHandler() {
-    }
     // Major method call, used to execute battle sequence
-    public void battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {
+    public int[] battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {
         GameOfThrones.Rank pile0CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ZERO].getCardList().get(CHARACTER_CARD).getRank();
         GameOfThrones.Rank pile1CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ONE].getCardList().get(CHARACTER_CARD).getRank();
+        String character0Result;
+        String character1Result;
 
         if (pile0Ranks[ATTACK_RANK_INDEX] > pile1Ranks[DEFENCE_RANK_INDEX]) {
             scores[0] += pile1CharacterRank.getRankValue();
@@ -43,8 +43,11 @@ public class BattleHandler {
             scores[2] += pile0CharacterRank.getRankValue();
             character1Result = "Character 1 attack character 0 failed.";
         }
+        //renderingFacade.updateScores();
         System.out.println(character0Result);
         System.out.println(character1Result);
+        return scores;
+        //renderingFacade.setStatusText(character0Result, character1Result);
     }
 
     public String getCharacter0Result(){

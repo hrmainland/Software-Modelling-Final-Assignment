@@ -391,10 +391,9 @@ public class GameOfThrones extends CardGame {
         int[] pile0Ranks = pileHandler.calculatePileRanks(0, piles);
         int[] pile1Ranks = pileHandler.calculatePileRanks(1, piles);
         renderingFacade.printStartBattleInfo(pile0Ranks, pile1Ranks,piles, ATTACK_RANK_INDEX, DEFENCE_RANK_INDEX);
-        battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
+        scores = battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
         renderingFacade.updateScores();
         renderingFacade.setStatusText(battleHandler.getCharacter0Result(), battleHandler.getCharacter1Result());
-
 
         // 5: discarded all cards on the piles
         nextStartingPlayer += 1;
@@ -454,7 +453,7 @@ public class GameOfThrones extends CardGame {
 			  seed = new Random().nextInt(); // so randomise
         }
     */
-        GameOfThrones.seed = 130008;
+        //GameOfThrones.seed = 130008;
         System.out.println("Seed = " + seed);
         GameOfThrones.random = new Random(seed);
         new GameOfThrones();
