@@ -23,7 +23,7 @@ public class GameOfThrones extends CardGame {
     private final int pileWidth = 40;
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
     private final RenderingFacade renderingFacade = new RenderingFacade(this);
-    private final BattleHandler battleHandler = new BattleHandler(renderingFacade);
+    private final BattleHandler battleHandler = new BattleHandler();
 
     private Actor[] pileTextActors = { null, null };
     private Actor[] scoreActors = {null, null, null, null};
@@ -204,7 +204,7 @@ public class GameOfThrones extends CardGame {
 
     private void setupGame() {
         hands = new Hand[nbPlayers];
-        pileHandler = new PileHandler(renderingFacade);
+        pileHandler = new PileHandler();
         for (int i = 0; i < nbPlayers; i++) {
             hands[i] = new Hand(deck);
         }
@@ -326,7 +326,7 @@ public class GameOfThrones extends CardGame {
             });
         }
 
-        pileHandler.updatePileRanks(piles);
+        rankUpdater(piles);
     }
 
     private void executeAPlay() {
@@ -352,7 +352,7 @@ public class GameOfThrones extends CardGame {
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
             selected.get().setVerso(false);
             selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)
-            pileHandler.updatePileRanks(piles);
+            rankUpdater(piles);
         }
 
         // 2: play the remaining nbPlayers * nbRounds - 2
@@ -378,7 +378,7 @@ public class GameOfThrones extends CardGame {
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
-                pileHandler.updatePileRanks(piles);
+                rankUpdater(piles);
             } else {
                 setStatusText("Pass.");
             }
@@ -387,10 +387,13 @@ public class GameOfThrones extends CardGame {
         }
 
         // 3: calculate winning & update scores for players
-        pileHandler.updatePileRanks(piles);
+        rankUpdater(piles);
         int[] pile0Ranks = pileHandler.calculatePileRanks(0, piles);
         int[] pile1Ranks = pileHandler.calculatePileRanks(1, piles);
+        renderingFacade.printStartBattleInfo(pile0Ranks, pile1Ranks,piles, ATTACK_RANK_INDEX, DEFENCE_RANK_INDEX);
         battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
+        renderingFacade.updateScores();
+        renderingFacade.setStatusText(battleHandler.getCharacter0Result(), battleHandler.getCharacter1Result());
 
 
         // 5: discarded all cards on the piles
@@ -398,6 +401,14 @@ public class GameOfThrones extends CardGame {
         delay(watchingTime);
     }
 
+    public void rankUpdater(Hand[] piles){
+        ArrayList<int[]> bothRanks;
+        bothRanks = pileHandler.updatePileRanks(piles);
+        for (int j = 0; j < piles.length; j++){
+            int[] ranks = bothRanks.get(j);
+            updatePileRankState(j, ranks[ATTACK_RANK_INDEX], ranks[DEFENCE_RANK_INDEX]);
+        }
+    }
     public GameOfThrones() {
         super(700, 700, 30);
 
@@ -443,7 +454,7 @@ public class GameOfThrones extends CardGame {
 			  seed = new Random().nextInt(); // so randomise
         }
     */
-        //GameOfThrones.seed = 130008;
+        GameOfThrones.seed = 130008;
         System.out.println("Seed = " + seed);
         GameOfThrones.random = new Random(seed);
         new GameOfThrones();
