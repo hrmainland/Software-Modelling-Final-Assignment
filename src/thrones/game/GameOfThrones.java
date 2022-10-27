@@ -46,6 +46,9 @@ public class GameOfThrones extends CardGame {
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
 
+    private PileObserver pileObserver;
+    private PileHandler pileHandler;
+
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
 
     public enum Suit {
@@ -209,6 +212,8 @@ public class GameOfThrones extends CardGame {
 
     private void setupGame() {
         hands = new Hand[nbPlayers];
+        pileObserver = new PileObserver(this);
+        pileHandler = new PileHandler(pileObserver);
         for (int i = 0; i < nbPlayers; i++) {
             hands[i] = new Hand(deck);
         }
@@ -302,13 +307,7 @@ public class GameOfThrones extends CardGame {
         }
     }
 
-    private int[] calculatePileRanks(int pileIndex) {
-        Hand currentPile = piles[pileIndex];
-        int i = currentPile.isEmpty() ? 0 : ((Rank) currentPile.get(0).getRank()).getRankValue();
-        return new int[] { i, i };
-    }
-
-    private void updatePileRankState(int pileIndex, int attackRank, int defenceRank) {
+    void updatePileRankState(int pileIndex, int attackRank, int defenceRank) {
         TextActor currentPile = (TextActor) pileTextActors[pileIndex];
         removeActor(currentPile);
         String text = playerTeams[pileIndex] + " Attack: " + attackRank + " - Defence: " + defenceRank;
@@ -316,12 +315,6 @@ public class GameOfThrones extends CardGame {
         addActor(pileTextActors[pileIndex], pileStatusLocations[pileIndex]);
     }
 
-    private void updatePileRanks() {
-        for (int j = 0; j < piles.length; j++) {
-            int[] ranks = calculatePileRanks(j);
-            updatePileRankState(j, ranks[ATTACK_RANK_INDEX], ranks[DEFENCE_RANK_INDEX]);
-        }
-    }
 
     private int getPlayerIndex(int index) {
         return index % nbPlayers;
@@ -348,7 +341,7 @@ public class GameOfThrones extends CardGame {
             });
         }
 
-        updatePileRanks();
+        pileHandler.updatePileRanks(piles);
     }
 
     private void executeAPlay() {
@@ -374,7 +367,7 @@ public class GameOfThrones extends CardGame {
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
             selected.get().setVerso(false);
             selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)
-            updatePileRanks();
+            pileHandler.updatePileRanks(piles);
         }
 
         // 2: play the remaining nbPlayers * nbRounds - 2
@@ -400,7 +393,7 @@ public class GameOfThrones extends CardGame {
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
-                updatePileRanks();
+                pileHandler.updatePileRanks(piles);
             } else {
                 setStatusText("Pass.");
             }
@@ -409,9 +402,9 @@ public class GameOfThrones extends CardGame {
         }
 
         // 3: calculate winning & update scores for players
-        updatePileRanks();
-        int[] pile0Ranks = calculatePileRanks(0);
-        int[] pile1Ranks = calculatePileRanks(1);
+        pileHandler.updatePileRanks(piles);
+        int[] pile0Ranks = pileHandler.calculatePileRanks(0, piles);
+        int[] pile1Ranks = pileHandler.calculatePileRanks(1, piles);
         battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
 
 
