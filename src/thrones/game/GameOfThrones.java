@@ -20,10 +20,10 @@ public class GameOfThrones extends CardGame {
     public final int nbStartCards = 9;
     public final int nbPlays = 6;
     public final int nbRounds = 3;
-    private final int handWidth = 400;
     private final int pileWidth = 40;
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
-    private final BattleHandler battleHandler = new BattleHandler(this);
+    private final RenderingFacade renderingFacade = new RenderingFacade(this);
+    private final BattleHandler battleHandler = new BattleHandler(renderingFacade);
 
     private Actor[] pileTextActors = { null, null };
     private Actor[] scoreActors = {null, null, null, null};
@@ -46,7 +46,6 @@ public class GameOfThrones extends CardGame {
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
 
-    private PileObserver pileObserver;
     private PileHandler pileHandler;
 
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
@@ -95,13 +94,6 @@ public class GameOfThrones extends CardGame {
             return rankValue;
         }
     }
-
-    private final Location[] handLocations = {
-            new Location(350, 625),
-            new Location(75, 350),
-            new Location(350, 75),
-            new Location(625, 350)
-    };
 
     private final Location[] scoreLocations = {
             new Location(575, 675),
@@ -212,8 +204,7 @@ public class GameOfThrones extends CardGame {
 
     private void setupGame() {
         hands = new Hand[nbPlayers];
-        pileObserver = new PileObserver(this);
-        pileHandler = new PileHandler(pileObserver);
+        pileHandler = new PileHandler(renderingFacade);
         for (int i = 0; i < nbPlayers; i++) {
             hands[i] = new Hand(deck);
         }
@@ -238,13 +229,7 @@ public class GameOfThrones extends CardGame {
             });
         }
         // graphics
-        RowLayout[] layouts = new RowLayout[nbPlayers];
-        for (int i = 0; i < nbPlayers; i++) {
-            layouts[i] = new RowLayout(handLocations[i], handWidth);
-            layouts[i].setRotationAngle(90 * i);
-            hands[i].setView(this, layouts[i]);
-            hands[i].draw();
-        }
+        renderingFacade.renderhandLayouts(nbPlayers, hands);
         // End graphics
     }
 

@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/thrones/game/RenderingFacade.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/PileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/RenderingFacade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/RenderingFacade.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +20,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="scott's-branch" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
