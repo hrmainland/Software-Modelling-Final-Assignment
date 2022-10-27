@@ -329,6 +329,9 @@ public class GameOfThrones extends CardGame {
         pileHandler.updatePileRanks(piles);
     }
 
+//    TODO delete me
+    private Player testPlayer = new SmartPlayer(1);
+
     private void executeAPlay() {
         resetPile();
 
@@ -341,6 +344,11 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < 2; i++) {
             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
             setStatusText("Player " + playerIndex + " select a Heart card to play");
+
+//            TODO delete me
+//            testPlayer.updateState(hands[0], piles);
+
+
             if (humanPlayers[playerIndex]) {
                 waitForCorrectSuit(playerIndex, true);
             } else {
@@ -362,6 +370,10 @@ public class GameOfThrones extends CardGame {
         while(remainingTurns > 0) {
             nextPlayer = getPlayerIndex(nextPlayer);
             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
+
+//            TODO delete me
+            testPlayer.updateState(hands[0], piles);
+
             if (humanPlayers[nextPlayer]) {
                 waitForCorrectSuit(nextPlayer, false);
             } else {
