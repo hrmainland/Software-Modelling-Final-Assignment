@@ -21,20 +21,17 @@ public class PileHandler {
     //toAdd:
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
-    private RenderingFacade renderingFacade;
-
-    public PileHandler(RenderingFacade renderingFacade) {
-        this.renderingFacade = renderingFacade;
-    }
 
     public PileHandler() {
     }
 
-    public void updatePileRanks(Hand[] piles) {
+    public ArrayList<int[]> updatePileRanks(Hand[] piles) {
+        ArrayList<int[]> allRanks = new ArrayList<>();
         for (int j = 0; j < piles.length; j++) {
             int[] ranks = calculatePileRanks(j, piles);
-            renderingFacade.updatePileRankState(j, ranks[ATTACK_RANK_INDEX], ranks[DEFENCE_RANK_INDEX]);
+            allRanks.add(ranks);
         }
+        return allRanks;
     }
 
     public int[] calculatePileRanks(int pileIndex, Hand[] piles) {

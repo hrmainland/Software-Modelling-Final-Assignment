@@ -12,18 +12,13 @@ public class BattleHandler {
     private final static int CHARACTER_CARD = 0;
     private final static int PLAYER_ZERO = 0;
     private final static int PLAYER_ONE = 1;
-    //private RenderingFacade renderingFacade;
     private String character0Result;
     private String character1Result;
-    //PileHandler pileHandler;
 
-    public BattleHandler() {
-        //this.renderingFacade = renderingFacade;
-        //this.pileHandler = pilehandler;
-    }
+    public BattleHandler() {}
+
     // Major method call, used to execute battle sequence
     public int[] battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {
-        //printStartBattleInfo(pile0Ranks, pile1Ranks, piles);
         GameOfThrones.Rank pile0CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ZERO].getCardList().get(CHARACTER_CARD).getRank();
         GameOfThrones.Rank pile1CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ONE].getCardList().get(CHARACTER_CARD).getRank();
         String character0Result;
@@ -55,15 +50,10 @@ public class BattleHandler {
         //renderingFacade.setStatusText(character0Result, character1Result);
     }
 
-    /*private void printStartBattleInfo(int[] pile0Ranks, int[] pile1Ranks, Hand[] piles) {
-        renderingFacade.printStartBattleInfo(pile0Ranks, pile1Ranks,piles, ATTACK_RANK_INDEX, DEFENCE_RANK_INDEX);
-    }*/
-
-    public String getCharacter0Result() {
+    public String getCharacter0Result(){
         return character0Result;
     }
-
-    public String getCharacter1Result() {
+    public String getCharacter1Result(){
         return character1Result;
     }
 }
