@@ -6,6 +6,7 @@ import ch.aplu.jgamegrid.*;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ public class GameOfThrones extends CardGame {
 
     static public int seed;
     static Random random;
+    private static int watchingTime;
     private final String version = "1.0";
     public final int nbPlayers = 4;
     public final int nbStartCards = 9;
@@ -23,11 +25,11 @@ public class GameOfThrones extends CardGame {
     private final int pileWidth = 40;
     private Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
     private final RenderingFacade renderingFacade = new RenderingFacade(this);
-    private final BattleHandler battleHandler = new BattleHandler(renderingFacade);
+    private final BattleHandler battleHandler = new BattleHandler();
 
     private Actor[] pileTextActors = { null, null };
     private Actor[] scoreActors = {null, null, null, null};
-    private final int watchingTime = 5000;
+
     private Hand[] hands;
     private Hand[] piles;
     private final String[] playerTeams = { "[Players 0 & 2]", "[Players 1 & 3]"};
@@ -174,7 +176,7 @@ public class GameOfThrones extends CardGame {
 
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
-             scores[i] = 0;
+            scores[i] = 0;
             String text = "P" + i + "-0";
             scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
             addActor(scoreActors[i], scoreLocations[i]);
@@ -390,8 +392,10 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
         int[] pile0Ranks = pileHandler.calculatePileRanks(0, piles);
         int[] pile1Ranks = pileHandler.calculatePileRanks(1, piles);
-        battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
-
+        renderingFacade.printStartBattleInfo(pile0Ranks, pile1Ranks,piles, ATTACK_RANK_INDEX, DEFENCE_RANK_INDEX);
+        scores = battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);
+        renderingFacade.updateScores();
+        renderingFacade.setStatusText(battleHandler.getCharacter0Result(), battleHandler.getCharacter1Result());
 
         // 5: discarded all cards on the piles
         nextStartingPlayer += 1;
@@ -433,13 +437,13 @@ public class GameOfThrones extends CardGame {
         refresh();
     }
 
-    public static void main(String[] args) {
-        /*System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        final Properties properties = new Properties();
-        properties.setProperty("watchingTime", "5000");
+    public static void main(String[] args) throws FileNotFoundException {
+        //System.out.println("Working Directory = " + System.getProperty("user.dir"));
+        Properties properties = new Properties();
+        //properties.setProperty("watchingTime", "5000");
 
         if (args == null || args.length == 0) {
-            properties = PropertiesLoader.loadPropertiesFile("cribbage.properties");
+            properties = PropertiesLoader.loadPropertiesFile("properties/smart.properties");
         } else {
             properties = PropertiesLoader.loadPropertiesFile(args[0]);
         }
@@ -450,8 +454,23 @@ public class GameOfThrones extends CardGame {
         } else { // and no property
 			  seed = new Random().nextInt(); // so randomise
         }
-    */
-        GameOfThrones.seed = 130008;
+
+        String watchingTimeProp = properties.getProperty("watchingTime");
+        if (watchingTimeProp != null) { // Use property watching time
+            watchingTime = Integer.parseInt(watchingTimeProp);
+        } else { // and no property
+            watchingTime = 5000; // so use default
+        }
+
+        for (int i=0; i<4; i++) {
+            String playerType = properties.getProperty("players." + i);
+            if (playerType != null) {
+                // create players
+            } else {
+                // create default player
+            }
+        }
+        //GameOfThrones.seed = 130008;
         System.out.println("Seed = " + seed);
         GameOfThrones.random = new Random(seed);
         new GameOfThrones();
