@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public class SimplePlayer extends RandomPlayer{
     private int myPile;
+    //private final Hand[] default_pile = new Hand[1];
 
     public SimplePlayer(int playerIndex) {
         super(playerIndex);

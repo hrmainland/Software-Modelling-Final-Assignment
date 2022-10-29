@@ -21,8 +21,6 @@ public class BattleHandler {
     public int[] battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {
         GameOfThrones.Rank pile0CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ZERO].getCardList().get(CHARACTER_CARD).getRank();
         GameOfThrones.Rank pile1CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ONE].getCardList().get(CHARACTER_CARD).getRank();
-        String character0Result;
-        String character1Result;
 
         if (pile0Ranks[ATTACK_RANK_INDEX] > pile1Ranks[DEFENCE_RANK_INDEX]) {
             scores[0] += pile1CharacterRank.getRankValue();

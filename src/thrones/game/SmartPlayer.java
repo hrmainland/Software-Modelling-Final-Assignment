@@ -58,7 +58,7 @@ public class SmartPlayer implements Player {
 //        play heart if one of first two cards
         if (isCharacter){
             if (hearts.size() > 0) {
-                bestCard = Optional.of(hearts.get(GameOfThrones.random.nextInt(hearts.size())));
+                bestCard = Optional.of(hearts.get(GameOfThrones.getRandom().nextInt(hearts.size())));
                 pile = playerIndex % 2;
                 return;
             }
