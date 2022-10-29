@@ -57,9 +57,12 @@ public class SmartPlayer implements Player {
 
 //        play heart if one of first two cards
         if (isCharacter){
-            bestCard = Optional.of(hearts.get(GameOfThrones.random.nextInt(hearts.size())));
-            pile = playerIndex % 2;
-            return;
+            if (hearts.size() > 0) {
+                bestCard = Optional.of(hearts.get(GameOfThrones.random.nextInt(hearts.size())));
+                pile = playerIndex % 2;
+                return;
+            }
+            bestCard = Optional.empty();
         }
 //        check for attack/defence card with no matching diamond
 //        get all ranks currently in played magic cards
@@ -91,21 +94,26 @@ public class SmartPlayer implements Player {
                 return;
             }
         }
-        ArrayList<Card> myPile = piles[playerIndex % 2].getCardList();
-        ArrayList<Card> oppPile = piles[(playerIndex + 1)% 2].getCardList();
+        ArrayList<Card> myPile = cloneHandAsList(piles[playerIndex % 2]);
+        ArrayList<Card> oppPile = cloneHandAsList(piles[(playerIndex + 1)% 2]);
         boolean[] initialResults = attackDefenceResults(myPile, oppPile);
         if (initialResults[ATTACK_WIN_INDEX] && initialResults[DEFENCE_WIN_INDEX]){
             bestCard = Optional.empty();
             return;
         }
         for (Card card : effectCards){
-            myPile = piles[playerIndex % 2].getCardList();
-            oppPile = piles[(playerIndex + 1)% 2].getCardList();
+            myPile = cloneHandAsList(piles[playerIndex % 2]);
+            oppPile = cloneHandAsList(piles[(playerIndex + 1)% 2]);
+//            myPile = piles[playerIndex % 2].getCardList();
+//            oppPile = piles[(playerIndex + 1)% 2].getCardList();
             GameOfThrones.Suit suit = (GameOfThrones.Suit) card.getSuit();
             assert (!suit.isCharacter()) : "Heart cards should not be considered for play";
             int pileIndex;
             if (suit.isMagic()){
                 pileIndex = (playerIndex + 1) % 2;
+                if (piles[pileIndex].getNumberOfCards() == 1){
+                    continue;
+                }
                 oppPile.add(card);
             }
             else{
@@ -121,6 +129,15 @@ public class SmartPlayer implements Player {
             }
         }
         bestCard = Optional.empty();
+    }
+
+    private ArrayList<Card> cloneHandAsList(Hand hand){
+        ArrayList<Card> handClone = new ArrayList<>();
+        for (Card card : hand.getCardList()){
+            Card newCard = card.clone();
+            handClone.add(newCard);
+        }
+        return handClone;
     }
 
     @Override
