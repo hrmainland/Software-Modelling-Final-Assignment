@@ -1,15 +1,8 @@
 package thrones.game;
-import ch.aplu.jcardgame.*;
-import ch.aplu.jgamegrid.*;
 
 import ch.aplu.jcardgame.Card;
-import ch.aplu.jcardgame.CardAdapter;
 import ch.aplu.jcardgame.Hand;
-import ch.aplu.jcardgame.RowLayout;
-import ch.aplu.jgamegrid.Actor;
-import ch.aplu.jgamegrid.TextActor;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -17,12 +10,12 @@ import java.util.ArrayList;
  */
 
 
-public class PileHandler {
+public class PileCalculator {
     //toAdd:
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
 
-    public PileHandler() {
+    public PileCalculator() {
     }
 
     public ArrayList<int[]> updatePileRanks(Hand[] piles) {
@@ -86,42 +79,4 @@ public class PileHandler {
         }
         return new int[]{attack, defence};
     }
-    /*
-    private void updatePileRankState(int pileIndex, int attackRank, int defenceRank) {
-        TextActor currentPile = (TextActor) pileTextActors[pileIndex];
-        //GameGrid.removeActor(currentPile);
-        for (PileObserver observer : observers) {
-            observer.notifyPileToRemove(currentPile);
-        }
-        String text = playerTeams[pileIndex] + " Attack: " + attackRank + " - Defence: " + defenceRank;
-        pileTextActors[pileIndex] = new TextActor(text, Color.WHITE, bgColor, smallFont);
-        addActor(pileTextActors[pileIndex], pileStatusLocations[pileIndex]);
-    }
-    */
-    /*
-    private void resetPile() {
-        if (piles != null) {
-            for (Hand pile : piles) {
-                pile.removeAll(true);
-            }
-        }
-        piles = new Hand[2];
-        for (int i = 0; i < 2; i++) {
-            piles[i] = new Hand(deck);
-            piles[i].setView(this, new RowLayout(pileLocations[i], 8 * pileWidth));
-            piles[i].draw();
-            final Hand currentPile = piles[i];
-            final int pileIndex = i;
-            piles[i].addCardListener(new CardAdapter() {
-                public void leftClicked(Card card) {
-                    selectedPileIndex = pileIndex;
-                    currentPile.setTouchEnabled(false);
-                }
-            });
-        }
-
-        updatePileRanks();
-    }
-
- */
 }
