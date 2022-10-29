@@ -277,6 +277,9 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
     }
 
+//    TODO delete me
+    private Player testPlayer = new SmartPlayer(1);
+
     private void executeAPlay() {
         resetPile();
 
@@ -288,11 +291,12 @@ public class GameOfThrones extends CardGame {
         // 1: play the first 2 hearts
         for (int i = 0; i < 2; i++) {
             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
+            updatePlayers();
+
             setStatusText("Player " + playerIndex + " select a Heart card to play");
 
             // currentPlayer chooses card, pile based on their in-class rules
             Player currentPlayer = playerList.get(playerIndex);
-            currentPlayer.updateState(hands[playerIndex], piles);
             int pileIndex = currentPlayer.getPile();
             selected = currentPlayer.getBestCard();
 
@@ -306,9 +310,7 @@ public class GameOfThrones extends CardGame {
             rankUpdater(piles);
 
             // Update the state of every player to reflect move change
-            for (int j=0; j<nbPlayers; j++) {
-                playerList.get(j).updateState(hands[j], piles);
-            }
+            updatePlayers();
 
         }
 
@@ -319,37 +321,25 @@ public class GameOfThrones extends CardGame {
         while(remainingTurns > 0) {
             nextPlayer = getPlayerIndex(nextPlayer);
             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
-            /*if (humanPlayers[nextPlayer]) {
-                waitForCorrectSuit(nextPlayer, false);
-            } else {
-                pickACorrectSuit(nextPlayer, false);
-            }*/
 
             // currentPlayer chooses card, pile based on their in-class rules
             Player currentPlayer = playerList.get(nextPlayer);
-            currentPlayer.updateState(hands[nextPlayer], piles);
-            selectedPileIndex = currentPlayer.getPile();
             selected = currentPlayer.getBestCard();
 
             if (selected.isPresent()) {
+                selectedPileIndex = currentPlayer.getPile();
                 setStatusText("Selected: " + canonical(selected.get()) + ". Player" + nextPlayer + " select a pile to play the card.");
-                /*if (humanPlayers[nextPlayer]) {
-                    waitForPileSelection();
-                } else {
-                    selectRandomPile();
-                }*/
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
                 rankUpdater(piles);
 
-                // Update the state of every player to reflect move change
-                for (int j=0; j<nbPlayers; j++) {
-                    playerList.get(j).updateState(hands[j], piles);
-                }
             } else {
                 setStatusText("Pass.");
             }
+            // Update the state of every player to reflect move change
+            updatePlayers();
+
             nextPlayer++;
             remainingTurns--;
         }
@@ -366,6 +356,12 @@ public class GameOfThrones extends CardGame {
         // 5: discarded all cards on the piles
         nextStartingPlayer += 1;
         delay(watchingTime);
+    }
+
+    private void updatePlayers(){
+        for (int j=0; j<nbPlayers; j++) {
+            playerList.get(j).updateState(hands[j], piles);
+        }
     }
 
     public void rankUpdater(Hand[] piles){
@@ -408,7 +404,7 @@ public class GameOfThrones extends CardGame {
         Properties properties;
 
         if (args == null || args.length == 0) {
-            properties = PropertiesLoader.loadPropertiesFile("properties/original.properties");
+            properties = PropertiesLoader.loadPropertiesFile("properties/onlysmart.properties");
         } else {
             properties = PropertiesLoader.loadPropertiesFile(args[0]);
         }

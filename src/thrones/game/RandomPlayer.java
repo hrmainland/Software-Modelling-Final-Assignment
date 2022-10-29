@@ -67,6 +67,7 @@ public class RandomPlayer implements Player{
 //        skip 0.25 of turns or if there are no valid cards
         if (shortListCards.isEmpty() || !isCharacter && GameOfThrones.random.nextInt(3) == 0) {
             bestCard = Optional.empty();
+            System.out.println("passing");
 //        select random card
         } else {
             bestCard = Optional.of(shortListCards.get(GameOfThrones.random.nextInt(shortListCards.size())));
