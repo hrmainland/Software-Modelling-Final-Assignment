@@ -173,22 +173,17 @@ public class GameOfThrones extends CardGame {
             System.out.println("hands[" + i + "]: " + canonical(hands[i]));
         }
 
-        for (final Hand currentHand : hands) {
-            // Set up human player for interaction
-            currentHand.addCardListener(new CardAdapter() {
-                public void leftDoubleClicked(Card card) {
-                    selected = Optional.of(card);
-                    currentHand.setTouchEnabled(false);
-                }
-                public void rightClicked(Card card) {
-                    selected = Optional.empty(); // Don't care which card we right-clicked for player to pass
-                    currentHand.setTouchEnabled(false);
-                }
-            });
-        }
         // graphics
         gameRenderer.renderhandLayouts(nbPlayers, hands);
         // End graphics
+    }
+
+    public Optional<Card> getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Optional<Card> selected) {
+        this.selected = selected;
     }
 
     private void pickACorrectSuit(int playerIndex, boolean isCharacter) {
@@ -264,14 +259,6 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < 2; i++) {
             piles[i] = new Hand(deck);
             gameRenderer.renderPile(piles[i], i);
-            final Hand currentPile = piles[i];
-            final int pileIndex = i;
-            piles[i].addCardListener(new CardAdapter() {
-                public void leftClicked(Card card) {
-                    selectedPileIndex = pileIndex;
-                    currentPile.setTouchEnabled(false);
-                }
-            });
         }
 
         rankUpdater(piles);
@@ -279,6 +266,7 @@ public class GameOfThrones extends CardGame {
 
     private void executeAPlay() {
         resetPile();
+        updatePlayers(true);
 
         nextStartingPlayer = getPlayerIndex(nextStartingPlayer);
         if (hands[nextStartingPlayer].getNumberOfCardsWithSuit(Suit.HEARTS) == 0)
@@ -288,7 +276,6 @@ public class GameOfThrones extends CardGame {
         // 1: play the first 2 hearts
         for (int i = 0; i < 2; i++) {
             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
-            updatePlayers();
 
             setStatusText("Player " + playerIndex + " select a Heart card to play");
 
@@ -307,7 +294,7 @@ public class GameOfThrones extends CardGame {
             rankUpdater(piles);
 
             // Update the state of every player to reflect move change
-            updatePlayers();
+            updatePlayers(false);
 
         }
 
@@ -335,7 +322,7 @@ public class GameOfThrones extends CardGame {
                 setStatusText("Pass.");
             }
             // Update the state of every player to reflect move change
-            updatePlayers();
+            updatePlayers(false);
 
             nextPlayer++;
             remainingTurns--;
@@ -355,9 +342,9 @@ public class GameOfThrones extends CardGame {
         delay(watchingTime);
     }
 
-    private void updatePlayers(){
+    private void updatePlayers(boolean newRound){
         for (int j=0; j<nbPlayers; j++) {
-            playerList.get(j).updateState(hands[j], piles);
+            playerList.get(j).updateState(hands[j], piles, newRound);
         }
     }
 

@@ -17,7 +17,7 @@ public class RandomPlayer implements Player{
     }
 
     @Override
-    public void updateState(Hand hand, Hand[] piles) {
+    public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        play heart if one of first two cards
         int totalCardsPlayed = getTotalCardsPlayed(piles);
 //        play card (is character depends on total cards played)
