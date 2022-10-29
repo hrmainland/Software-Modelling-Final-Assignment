@@ -277,9 +277,6 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
     }
 
-//    TODO delete me
-    private Player testPlayer = new SmartPlayer(1);
-
     private void executeAPlay() {
         resetPile();
 
