@@ -173,22 +173,31 @@ public class GameOfThrones extends CardGame {
             System.out.println("hands[" + i + "]: " + canonical(hands[i]));
         }
 
-        for (final Hand currentHand : hands) {
-            // Set up human player for interaction
-            currentHand.addCardListener(new CardAdapter() {
-                public void leftDoubleClicked(Card card) {
-                    selected = Optional.of(card);
-                    currentHand.setTouchEnabled(false);
-                }
-                public void rightClicked(Card card) {
-                    selected = Optional.empty(); // Don't care which card we right-clicked for player to pass
-                    currentHand.setTouchEnabled(false);
-                }
-            });
-        }
+//        for (final Hand currentHand : hands) {
+//            // Set up human player for interaction
+//            currentHand.addCardListener(new CardAdapter() {
+//                public void leftDoubleClicked(Card card) {
+//                    selected = Optional.of(card);
+//                    currentHand.setTouchEnabled(false);
+//                }
+//                public void rightClicked(Card card) {
+//                    selected = Optional.empty(); // Don't care which card we right-clicked for player to pass
+//                    currentHand.setTouchEnabled(false);
+//                }
+//            });
+//        }
+
         // graphics
         gameRenderer.renderhandLayouts(nbPlayers, hands);
         // End graphics
+    }
+
+    public Optional<Card> getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Optional<Card> selected) {
+        this.selected = selected;
     }
 
     private void pickACorrectSuit(int playerIndex, boolean isCharacter) {
@@ -264,14 +273,6 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < 2; i++) {
             piles[i] = new Hand(deck);
             gameRenderer.renderPile(piles[i], i);
-            final Hand currentPile = piles[i];
-            final int pileIndex = i;
-            piles[i].addCardListener(new CardAdapter() {
-                public void leftClicked(Card card) {
-                    selectedPileIndex = pileIndex;
-                    currentPile.setTouchEnabled(false);
-                }
-            });
         }
 
         rankUpdater(piles);
