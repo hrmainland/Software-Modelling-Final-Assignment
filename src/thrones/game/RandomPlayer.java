@@ -17,7 +17,7 @@ public class RandomPlayer implements Player{
     }
 
     @Override
-    public void updateState(Hand hand, Hand[] piles) {
+    public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        play heart if one of first two cards
         int totalCardsPlayed = getTotalCardsPlayed(piles);
 //        play card (is character depends on total cards played)
@@ -67,6 +67,7 @@ public class RandomPlayer implements Player{
 //        skip 0.25 of turns or if there are no valid cards
         if (shortListCards.isEmpty() || !isCharacter && GameOfThrones.random.nextInt(3) == 0) {
             bestCard = Optional.empty();
+            System.out.println("passing");
 //        select random card
         } else {
             bestCard = Optional.of(shortListCards.get(GameOfThrones.random.nextInt(shortListCards.size())));

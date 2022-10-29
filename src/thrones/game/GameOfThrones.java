@@ -41,6 +41,8 @@ public class GameOfThrones extends CardGame {
 
     private PileCalculator pileCalculator;
 
+    private static ArrayList<Player> playerList = new ArrayList<>();
+
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
 
     public enum Suit {
@@ -171,22 +173,17 @@ public class GameOfThrones extends CardGame {
             System.out.println("hands[" + i + "]: " + canonical(hands[i]));
         }
 
-        for (final Hand currentHand : hands) {
-            // Set up human player for interaction
-            currentHand.addCardListener(new CardAdapter() {
-                public void leftDoubleClicked(Card card) {
-                    selected = Optional.of(card);
-                    currentHand.setTouchEnabled(false);
-                }
-                public void rightClicked(Card card) {
-                    selected = Optional.empty(); // Don't care which card we right-clicked for player to pass
-                    currentHand.setTouchEnabled(false);
-                }
-            });
-        }
         // graphics
         gameRenderer.renderhandLayouts(nbPlayers, hands);
         // End graphics
+    }
+
+    public Optional<Card> getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Optional<Card> selected) {
+        this.selected = selected;
     }
 
     private void pickACorrectSuit(int playerIndex, boolean isCharacter) {
@@ -262,14 +259,6 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < 2; i++) {
             piles[i] = new Hand(deck);
             gameRenderer.renderPile(piles[i], i);
-            final Hand currentPile = piles[i];
-            final int pileIndex = i;
-            piles[i].addCardListener(new CardAdapter() {
-                public void leftClicked(Card card) {
-                    selectedPileIndex = pileIndex;
-                    currentPile.setTouchEnabled(false);
-                }
-            });
         }
 
         rankUpdater(piles);
@@ -277,6 +266,7 @@ public class GameOfThrones extends CardGame {
 
     private void executeAPlay() {
         resetPile();
+        updatePlayers(true);
 
         nextStartingPlayer = getPlayerIndex(nextStartingPlayer);
         if (hands[nextStartingPlayer].getNumberOfCardsWithSuit(Suit.HEARTS) == 0)
@@ -286,19 +276,26 @@ public class GameOfThrones extends CardGame {
         // 1: play the first 2 hearts
         for (int i = 0; i < 2; i++) {
             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
-            setStatusText("Player " + playerIndex + " select a Heart card to play");
-            if (humanPlayers[playerIndex]) {
-                waitForCorrectSuit(playerIndex, true);
-            } else {
-                pickACorrectSuit(playerIndex, true);
-            }
 
-            int pileIndex = playerIndex % 2;
+            setStatusText("Player " + playerIndex + " select a Heart card to play");
+
+            // currentPlayer chooses card, pile based on their in-class rules
+            Player currentPlayer = playerList.get(playerIndex);
+            int pileIndex = currentPlayer.getPile();
+            selected = currentPlayer.getBestCard();
+
+            // Print console message
             assert selected.isPresent() : " Pass returned on selection of character.";
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
+
+            // Handle drawing / transfer logic
             selected.get().setVerso(false);
             selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)
             rankUpdater(piles);
+
+            // Update the state of every player to reflect move change
+            updatePlayers(false);
+
         }
 
         // 2: play the remaining nbPlayers * nbRounds - 2
@@ -308,26 +305,25 @@ public class GameOfThrones extends CardGame {
         while(remainingTurns > 0) {
             nextPlayer = getPlayerIndex(nextPlayer);
             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
-            if (humanPlayers[nextPlayer]) {
-                waitForCorrectSuit(nextPlayer, false);
-            } else {
-                pickACorrectSuit(nextPlayer, false);
-            }
+
+            // currentPlayer chooses card, pile based on their in-class rules
+            Player currentPlayer = playerList.get(nextPlayer);
+            selected = currentPlayer.getBestCard();
 
             if (selected.isPresent()) {
+                selectedPileIndex = currentPlayer.getPile();
                 setStatusText("Selected: " + canonical(selected.get()) + ". Player" + nextPlayer + " select a pile to play the card.");
-                if (humanPlayers[nextPlayer]) {
-                    waitForPileSelection();
-                } else {
-                    selectRandomPile();
-                }
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
                 rankUpdater(piles);
+
             } else {
                 setStatusText("Pass.");
             }
+            // Update the state of every player to reflect move change
+            updatePlayers(false);
+
             nextPlayer++;
             remainingTurns--;
         }
@@ -344,6 +340,12 @@ public class GameOfThrones extends CardGame {
         // 5: discarded all cards on the piles
         nextStartingPlayer += 1;
         delay(watchingTime);
+    }
+
+    private void updatePlayers(boolean newRound){
+        for (int j=0; j<nbPlayers; j++) {
+            playerList.get(j).updateState(hands[j], piles, newRound);
+        }
     }
 
     public void rankUpdater(Hand[] piles){
@@ -383,20 +385,29 @@ public class GameOfThrones extends CardGame {
 
     public static void main(String[] args) throws FileNotFoundException {
         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        Properties properties = new Properties();
-        //properties.setProperty("watchingTime", "5000");
+        Properties properties;
 
         if (args == null || args.length == 0) {
-            properties = PropertiesLoader.loadPropertiesFile("properties/smart.properties");
+            properties = PropertiesLoader.loadPropertiesFile("properties/onlysmart.properties");
         } else {
             properties = PropertiesLoader.loadPropertiesFile(args[0]);
         }
 
+        initialiseGameProperties(properties);
+
+        System.out.println("Seed = " + seed);
+        GameOfThrones.random = new Random(seed);
+        new GameOfThrones();
+    }
+
+    private static void initialiseGameProperties(Properties properties) {
+        PlayerFactory playerFactory = new PlayerFactory();
+
         String seedProp = properties.getProperty("seed");  //Seed property
         if (seedProp != null) { // Use property seed
-			  seed = Integer.parseInt(seedProp);
+            seed = Integer.parseInt(seedProp);
         } else { // and no property
-			  seed = new Random().nextInt(); // so randomise
+            seed = new Random().nextInt(); // so randomise
         }
 
         String watchingTimeProp = properties.getProperty("watchingTime");
@@ -408,16 +419,8 @@ public class GameOfThrones extends CardGame {
 
         for (int i=0; i<4; i++) {
             String playerType = properties.getProperty("players." + i);
-            if (playerType != null) {
-                // create players
-            } else {
-                // create default player
-            }
+            playerList.add(playerFactory.getPlayer(playerType, i));
         }
-        //GameOfThrones.seed = 130008;
-        System.out.println("Seed = " + seed);
-        GameOfThrones.random = new Random(seed);
-        new GameOfThrones();
     }
-
 }
+

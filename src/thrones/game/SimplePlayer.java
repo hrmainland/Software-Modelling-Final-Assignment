@@ -13,8 +13,8 @@ public class SimplePlayer extends RandomPlayer{
         super(playerIndex);
         myPile = super.getPlayerIndex() % 2;
     }
-    public void updateState(Hand hand, Hand[] piles) {
-        super.updateState(hand, piles);
+    public void updateState(Hand hand, Hand[] piles, boolean newRound) {
+        super.updateState(hand, piles, newRound);
         if (super.getTotalCardsPlayed(piles) >=2) {
             dontHelpOpponent();
         }
@@ -26,9 +26,11 @@ public class SimplePlayer extends RandomPlayer{
 
             if ((cardSuit.isDefence() || cardSuit.isAttack()) && super.getPile() != myPile){
                 super.setBestCard(Optional.empty());
+                System.out.println("passing");
             }
             if (cardSuit.isMagic() && super.getPile() == myPile){
                 super.setBestCard(Optional.empty());
+                System.out.println("passing");
             }
         }
     }
