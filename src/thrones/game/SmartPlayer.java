@@ -161,16 +161,4 @@ public class SmartPlayer implements Player {
         return new boolean[]{attackWin, defenceWin};
     }
 
-    private void makeProspectivePiles(Hand[] piles, Card card, Hand hand){
-        GameOfThrones.Suit suit = (GameOfThrones.Suit) card.getSuit();
-        assert !suit.isCharacter() : "Heart cards should not be considered";
-        if (suit.isMagic()) {
-            card.transfer(piles[(playerIndex + 1) % 2], false);
-        }
-        else{
-            card.transfer(piles[playerIndex % 2], false);
-        }
-//        calculate scores
-        card.transfer(hand, false);
-    }
 }
