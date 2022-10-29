@@ -9,10 +9,17 @@ import java.util.Collections;
 import java.util.Optional;
 
 public class SmartPlayer implements Player {
+    private final int ATTACK_RANK_INDEX = 0;
+    private final int DEFENCE_RANK_INDEX = 1;
+    private final int ATTACK_WIN_INDEX = 0;
+    private final int DEFENCE_WIN_INDEX = 1;
+
+
     private final int playerIndex;
     private Optional<Card> bestCard;
     private ArrayList<Card> magicCardsPlayed;
     private int pile;
+    private PileCalculator pileCalculator = new PileCalculator();
 
     public SmartPlayer(int playerIndex) {
         this.playerIndex = playerIndex;
@@ -84,21 +91,46 @@ public class SmartPlayer implements Player {
                 return;
             }
         }
-        for (Card card : effectCards) {
-            makeProspectivePiles(piles, card, hand);
+        ArrayList<Card> myPile = piles[playerIndex % 2].getCardList();
+        ArrayList<Card> oppPile = piles[(playerIndex + 1)% 2].getCardList();
+        boolean[] initialResults = attackDefenceResults(myPile, oppPile);
+        if (initialResults[ATTACK_WIN_INDEX] && initialResults[DEFENCE_WIN_INDEX]){
+            bestCard = Optional.empty();
+            return;
         }
-//        for each card check if playing would win game in current state
-//        pass if neither of the above two conditions are met
+        for (Card card : effectCards){
+            myPile = piles[playerIndex % 2].getCardList();
+            oppPile = piles[(playerIndex + 1)% 2].getCardList();
+            GameOfThrones.Suit suit = (GameOfThrones.Suit) card.getSuit();
+            assert (!suit.isCharacter()) : "Heart cards should not be considered for play";
+            int pileIndex;
+            if (suit.isMagic()){
+                pileIndex = (playerIndex + 1) % 2;
+                oppPile.add(card);
+            }
+            else{
+                pileIndex = playerIndex % 2;
+                myPile.add(card);
+            }
+            boolean[] currentResults = attackDefenceResults(myPile, oppPile);
+            if (!initialResults[ATTACK_WIN_INDEX] && currentResults[ATTACK_WIN_INDEX]
+                    || !initialResults[DEFENCE_WIN_INDEX] && currentResults[DEFENCE_WIN_INDEX]){
+                bestCard = Optional.of(card);
+                pile = pileIndex;
+                return;
+            }
+        }
+        bestCard = Optional.empty();
     }
 
     @Override
     public Optional<Card> getBestCard() {
-        return Optional.empty();
+        return bestCard;
     }
 
     @Override
     public int getPile() {
-        return 0;
+        return pile;
     }
 
     public int getTotalCardsPlayed(Hand[] piles){
@@ -119,6 +151,14 @@ public class SmartPlayer implements Player {
             }
         }
         return partition;
+    }
+
+    private boolean[] attackDefenceResults(ArrayList<Card> myPile, ArrayList<Card> oppPile){
+        int[] myResults = pileCalculator.pileRanksByList(myPile);
+        int[] oppResults = pileCalculator.pileRanksByList(oppPile);
+        boolean attackWin = myResults[ATTACK_RANK_INDEX] > oppResults[DEFENCE_RANK_INDEX];
+        boolean defenceWin = myResults[DEFENCE_RANK_INDEX] >= oppResults[ATTACK_RANK_INDEX];
+        return new boolean[]{attackWin, defenceWin};
     }
 
     private void makeProspectivePiles(Hand[] piles, Card card, Hand hand){
