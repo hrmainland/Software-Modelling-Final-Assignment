@@ -30,17 +30,12 @@ public class GameOfThrones extends CardGame {
     private final String[] playerTeams = { "[Players 0 & 2]", "[Players 1 & 3]"};
     private int nextStartingPlayer = random.nextInt(nbPlayers);
     private int[] scores = new int[nbPlayers];
-    // private boolean[] humanPlayers = { true, false, false, false};
-    private boolean[] humanPlayers = { false, false, false, false};
     private Optional<Card> selected;
     private final int NON_SELECTION_VALUE = -1;
     private int selectedPileIndex = NON_SELECTION_VALUE;
-    private final int UNDEFINED_INDEX = -1;
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
-
     private PileCalculator pileCalculator;
-
     private static ArrayList<Player> playerList = new ArrayList<>();
 
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
@@ -176,73 +171,6 @@ public class GameOfThrones extends CardGame {
         // graphics
         gameRenderer.renderhandLayouts(nbPlayers, hands);
         // End graphics
-    }
-
-    public Optional<Card> getSelected() {
-        return selected;
-    }
-
-    public void setSelected(Optional<Card> selected) {
-        this.selected = selected;
-    }
-
-    private void pickACorrectSuit(int playerIndex, boolean isCharacter) {
-        Hand currentHand = hands[playerIndex];
-        List<Card> shortListCards = new ArrayList<>();
-        for (int i = 0; i < currentHand.getCardList().size(); i++) {
-            Card card = currentHand.getCardList().get(i);
-            Suit suit = (Suit) card.getSuit();
-            if (suit.isCharacter() == isCharacter) {
-                shortListCards.add(card);
-            }
-        }
-        if (shortListCards.isEmpty() || !isCharacter && random.nextInt(3) == 0) {
-            selected = Optional.empty();
-        } else {
-            selected = Optional.of(shortListCards.get(random.nextInt(shortListCards.size())));
-        }
-    }
-
-    private void selectRandomPile() {
-        selectedPileIndex = random.nextInt(2);
-    }
-
-    private void waitForCorrectSuit(int playerIndex, boolean isCharacter) {
-        if (hands[playerIndex].isEmpty()) {
-            selected = Optional.empty();
-        } else {
-            selected = null;
-            hands[playerIndex].setTouchEnabled(true);
-            do {
-                if (selected == null) {
-                    delay(100);
-                    continue;
-                }
-                Suit suit = selected.isPresent() ? (Suit) selected.get().getSuit() : null;
-                if (isCharacter && suit != null && suit.isCharacter() ||         // If we want character, can't pass and suit must be right
-                        !isCharacter && (suit == null || !suit.isCharacter())) { // If we don't want character, can pass or suit must not be character
-                    // if (suit != null && suit.isCharacter() == isCharacter) {
-                    break;
-                } else {
-                    selected = null;
-                    hands[playerIndex].setTouchEnabled(true);
-                }
-                delay(100);
-            } while (true);
-        }
-    }
-
-    private void waitForPileSelection() {
-        selectedPileIndex = NON_SELECTION_VALUE;
-        for (Hand pile : piles) {
-            pile.setTouchEnabled(true);
-        }
-        while(selectedPileIndex == NON_SELECTION_VALUE) {
-            delay(100);
-        }
-        for (Hand pile : piles) {
-            pile.setTouchEnabled(false);
-        }
     }
 
     private int getPlayerIndex(int index) {

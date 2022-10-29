@@ -12,8 +12,6 @@ import java.util.ArrayList;
 
 public class PileCalculator {
     //toAdd:
-    private final int ATTACK_RANK_INDEX = 0;
-    private final int DEFENCE_RANK_INDEX = 1;
 
     public PileCalculator() {
     }
