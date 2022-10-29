@@ -41,6 +41,8 @@ public class GameOfThrones extends CardGame {
 
     private PileCalculator pileCalculator;
 
+    private static ArrayList<Player> playerList = new ArrayList<>();
+
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
 
     public enum Suit {
@@ -287,18 +289,27 @@ public class GameOfThrones extends CardGame {
         for (int i = 0; i < 2; i++) {
             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
             setStatusText("Player " + playerIndex + " select a Heart card to play");
-            if (humanPlayers[playerIndex]) {
-                waitForCorrectSuit(playerIndex, true);
-            } else {
-                pickACorrectSuit(playerIndex, true);
-            }
 
-            int pileIndex = playerIndex % 2;
+            // currentPlayer chooses card, pile based on their in-class rules
+            Player currentPlayer = playerList.get(playerIndex);
+            currentPlayer.updateState(hands[playerIndex], piles);
+            int pileIndex = currentPlayer.getPile();
+            selected = currentPlayer.getBestCard();
+
+            // Print console message
             assert selected.isPresent() : " Pass returned on selection of character.";
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
+
+            // Handle drawing / transfer logic
             selected.get().setVerso(false);
             selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)
             rankUpdater(piles);
+
+            // Update the state of every player to reflect move change
+            for (int j=0; j<nbPlayers; j++) {
+                playerList.get(j).updateState(hands[j], piles);
+            }
+
         }
 
         // 2: play the remaining nbPlayers * nbRounds - 2
@@ -308,23 +319,34 @@ public class GameOfThrones extends CardGame {
         while(remainingTurns > 0) {
             nextPlayer = getPlayerIndex(nextPlayer);
             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
-            if (humanPlayers[nextPlayer]) {
+            /*if (humanPlayers[nextPlayer]) {
                 waitForCorrectSuit(nextPlayer, false);
             } else {
                 pickACorrectSuit(nextPlayer, false);
-            }
+            }*/
+
+            // currentPlayer chooses card, pile based on their in-class rules
+            Player currentPlayer = playerList.get(nextPlayer);
+            currentPlayer.updateState(hands[nextPlayer], piles);
+            selectedPileIndex = currentPlayer.getPile();
+            selected = currentPlayer.getBestCard();
 
             if (selected.isPresent()) {
                 setStatusText("Selected: " + canonical(selected.get()) + ". Player" + nextPlayer + " select a pile to play the card.");
-                if (humanPlayers[nextPlayer]) {
+                /*if (humanPlayers[nextPlayer]) {
                     waitForPileSelection();
                 } else {
                     selectRandomPile();
-                }
+                }*/
                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
                 selected.get().setVerso(false);
                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
                 rankUpdater(piles);
+
+                // Update the state of every player to reflect move change
+                for (int j=0; j<nbPlayers; j++) {
+                    playerList.get(j).updateState(hands[j], piles);
+                }
             } else {
                 setStatusText("Pass.");
             }
@@ -383,20 +405,29 @@ public class GameOfThrones extends CardGame {
 
     public static void main(String[] args) throws FileNotFoundException {
         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        Properties properties = new Properties();
-        //properties.setProperty("watchingTime", "5000");
+        Properties properties;
 
         if (args == null || args.length == 0) {
-            properties = PropertiesLoader.loadPropertiesFile("properties/smart.properties");
+            properties = PropertiesLoader.loadPropertiesFile("properties/original.properties");
         } else {
             properties = PropertiesLoader.loadPropertiesFile(args[0]);
         }
 
+        initialiseGameProperties(properties);
+
+        System.out.println("Seed = " + seed);
+        GameOfThrones.random = new Random(seed);
+        new GameOfThrones();
+    }
+
+    private static void initialiseGameProperties(Properties properties) {
+        PlayerFactory playerFactory = new PlayerFactory();
+
         String seedProp = properties.getProperty("seed");  //Seed property
         if (seedProp != null) { // Use property seed
-			  seed = Integer.parseInt(seedProp);
+            seed = Integer.parseInt(seedProp);
         } else { // and no property
-			  seed = new Random().nextInt(); // so randomise
+            seed = new Random().nextInt(); // so randomise
         }
 
         String watchingTimeProp = properties.getProperty("watchingTime");
@@ -408,16 +439,8 @@ public class GameOfThrones extends CardGame {
 
         for (int i=0; i<4; i++) {
             String playerType = properties.getProperty("players." + i);
-            if (playerType != null) {
-                // create players
-            } else {
-                // create default player
-            }
+            playerList.add(playerFactory.getPlayer(playerType, i));
         }
-        //GameOfThrones.seed = 130008;
-        System.out.println("Seed = " + seed);
-        GameOfThrones.random = new Random(seed);
-        new GameOfThrones();
     }
-
 }
+
