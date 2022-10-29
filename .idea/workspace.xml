@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/PileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/RenderingFacade.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +19,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -91,5 +94,30 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+          <line>277</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+          <line>356</line>
+          <properties class="thrones.game.GameOfThrones">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

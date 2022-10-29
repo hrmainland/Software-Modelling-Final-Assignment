@@ -281,7 +281,7 @@ public class GameOfThrones extends CardGame {
 
             // currentPlayer chooses card, pile based on their in-class rules
             Player currentPlayer = playerList.get(playerIndex);
-            int pileIndex = currentPlayer.getPile();
+            int pileIndex = playerIndex % 2;
             selected = currentPlayer.getBestCard();
 
             // Print console message
@@ -388,7 +388,7 @@ public class GameOfThrones extends CardGame {
         Properties properties;
 
         if (args == null || args.length == 0) {
-            properties = PropertiesLoader.loadPropertiesFile("properties/onlysmart.properties");
+            properties = PropertiesLoader.loadPropertiesFile("properties/got.properties");
         } else {
             properties = PropertiesLoader.loadPropertiesFile(args[0]);
         }
