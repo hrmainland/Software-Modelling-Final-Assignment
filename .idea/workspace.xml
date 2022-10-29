@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="fixed another issue with the starting with human">
+    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="deleting unnessecary code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/HumanPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/HumanPlayer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/PlayerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PlayerFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,17 +33,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.14648438&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "jdk.selected.JAVA_MODULE": "17",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.14648438",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "editor.preferences.tabs"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="GameOfThrones" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
@@ -91,7 +89,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667037048655</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="deleting unnessecary code">
+      <created>1667043498698</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1667043498698</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -107,7 +112,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed another issue with the starting with human" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed another issue with the starting with human" />
+    <MESSAGE value="deleting unnessecary code" />
+    <option name="LAST_COMMIT_MESSAGE" value="deleting unnessecary code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

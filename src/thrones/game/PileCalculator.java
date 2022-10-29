@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 public class PileCalculator {
     //toAdd:
+    private final int ATTACK_RANK_INDEX = 0;
+    private final int DEFENCE_RANK_INDEX = 1;
 
     public PileCalculator() {
     }
@@ -34,6 +36,9 @@ public class PileCalculator {
         GameOfThrones.Suit suit;
         int rankValue = 0;
         int prevRankValue = 0;
+        if (cards.size() == 0) {
+            return new int[]{attack, defence};
+        }
         for (int i=0; i<cards.size(); i++) {
             if (i!=0) {
                 prevCard = cards.get(i-1);
