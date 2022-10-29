@@ -45,18 +45,11 @@ public class HumanPlayer implements Player{
     }
 
     @Override
-    public void updateState(Hand hand, Hand[] piles) {
+    public void updateState(Hand hand, Hand[] piles, boolean newRound) {
         this.hand = hand;
-        for (int i = 0; i < piles.length; i++){
-            if (piles[i].getNumberOfCards() < this.piles[i].getNumberOfCards()){
-                setupListener(hand, piles);
-                return;
-            }
-        }
         this.piles = piles;
-        if (firstPass){
+        if (newRound){
             setupListener(hand, piles);
-            firstPass = false;
         }
         firstTwoCards = getTotalCardsPlayed(piles) < 2;
     }

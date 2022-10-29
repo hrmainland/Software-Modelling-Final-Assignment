@@ -27,7 +27,7 @@ public class SmartPlayer implements Player {
     }
 
     @Override
-    public void updateState(Hand hand, Hand[] piles) {
+    public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        update magic cards played
         for (Hand pile : piles) {
             for (int i = 0; i < pile.getCardList().size(); i++) {
