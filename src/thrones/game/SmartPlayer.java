@@ -63,6 +63,7 @@ public class SmartPlayer implements Player {
                 return;
             }
             bestCard = Optional.empty();
+            return;
         }
 //        check for attack/defence card with no matching diamond
 //        get all ranks currently in played magic cards
