@@ -41,11 +41,9 @@ public class BattleHandler {
             scores[2] += pile0CharacterRank.getRankValue();
             character1Result = "Character 1 attack character 0 failed.";
         }
-        //renderingFacade.updateScores();
         System.out.println(character0Result);
         System.out.println(character1Result);
         return scores;
-        //renderingFacade.setStatusText(character0Result, character1Result);
     }
 
     public String getCharacter0Result(){

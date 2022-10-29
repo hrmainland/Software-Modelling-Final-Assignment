@@ -22,7 +22,7 @@ public class GameOfThrones extends CardGame {
     private final int NUM_PILES = 2;
     private final Deck DECK = new Deck(Suit.values(), Rank.values(), "cover");
     private final GameRenderer gameRenderer = new GameRenderer(this);
-    private final PileCalculator pileCalculator = new PileCalculator();
+    private final PileCalculator pileCalculator = PileCalculator.getInstance();
     private final BattleHandler battleHandler = new BattleHandler();
     private Hand[] hands;
     private Hand[] piles;

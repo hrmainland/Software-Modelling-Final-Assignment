@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 public interface Player {
-    public void updateState(Hand hand, Hand[] piles, boolean newRound);
-    public Optional<Card> getBestCard();
-    public int getPile();
+    void updateState(Hand hand, Hand[] piles, boolean newRound);
+    Optional<Card> getBestCard();
+    int getPile();
 }

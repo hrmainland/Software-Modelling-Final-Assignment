@@ -19,7 +19,7 @@ public class SmartPlayer implements Player {
     private Optional<Card> bestCard;
     private ArrayList<Card> magicCardsPlayed;
     private int pile;
-    private PileCalculator pileCalculator = new PileCalculator();
+    private PileCalculator pileCalculator = PileCalculator.getInstance();
 
     public SmartPlayer(int playerIndex) {
         this.playerIndex = playerIndex;
