@@ -10,10 +10,13 @@ public class HumanPlayer implements Player{
     private int pile = NON_SELECTION_VALUE;
     private Hand[] piles;
     private Hand hand;
+    private int playerIndex;
     private boolean firstTwoCards = true;
+    private boolean firstPass = true;
 
 
-    public HumanPlayer() {
+    public HumanPlayer(int playerIndex) {
+        this.playerIndex = playerIndex;
     }
 
     private void setupListener(Hand hand, Hand[] piles){

@@ -18,7 +18,7 @@ public class PlayerFactory {
                 player = new SmartPlayer(playerIndex);
                 break;
             default:
-                player = new HumanPlayer();
+                player = new HumanPlayer(playerIndex);
                 break;
         }
         return player;
