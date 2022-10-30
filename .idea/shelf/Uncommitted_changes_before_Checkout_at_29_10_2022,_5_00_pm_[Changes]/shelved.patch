@@ -1,0 +1,113 @@
+Index: src/thrones/game/GameOfThrones.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/thrones/game/GameOfThrones.java b/src/thrones/game/GameOfThrones.java
+--- a/src/thrones/game/GameOfThrones.java	
++++ b/src/thrones/game/GameOfThrones.java	
+@@ -185,7 +185,7 @@
+             });
+         }
+         // graphics
+-        gameRenderer.renderhandLayouts(nbPlayers, hands);
++        gameRenderer.renderHandLayouts(nbPlayers, hands);
+         // End graphics
+     }
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	
++++ b/.idea/workspace.xml	
+@@ -1,12 +1,10 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
++    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="moved all rendering to gameRenderer and updated names to be more appropriate">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/PileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/RenderingFacade.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -79,6 +77,14 @@
+       <option name="presentableId" value="Default" />
+       <updated>1666773681486</updated>
+     </task>
++    <task id="LOCAL-00001" summary="moved all rendering to gameRenderer and updated names to be more appropriate">
++      <created>1667004768082</created>
++      <option name="number" value="00001" />
++      <option name="presentableId" value="LOCAL-00001" />
++      <option name="project" value="LOCAL" />
++      <updated>1667004768082</updated>
++    </task>
++    <option name="localTasksCounter" value="2" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -92,4 +98,42 @@
+       </map>
+     </option>
+   </component>
++  <component name="VcsManagerConfiguration">
++    <MESSAGE value="moved all rendering to gameRenderer and updated names to be more appropriate" />
++    <option name="LAST_COMMIT_MESSAGE" value="moved all rendering to gameRenderer and updated names to be more appropriate" />
++  </component>
++  <component name="XDebuggerManager">
++    <breakpoint-manager>
++      <breakpoints>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>13</line>
++          <option name="timeStamp" value="1" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>278</line>
++          <option name="timeStamp" value="3" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-method">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>277</line>
++          <properties class="thrones.game.GameOfThrones" method="executeAPlay">
++            <option name="EMULATED" value="true" />
++            <option name="WATCH_EXIT" value="false" />
++          </properties>
++          <option name="timeStamp" value="2" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-method">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>356</line>
++          <properties class="thrones.game.GameOfThrones" method="&lt;init&gt;">
++            <option name="EMULATED" value="true" />
++            <option name="WATCH_EXIT" value="false" />
++          </properties>
++          <option name="timeStamp" value="4" />
++        </line-breakpoint>
++      </breakpoints>
++    </breakpoint-manager>
++  </component>
+ </project>
+\ No newline at end of file
+Index: src/thrones/game/GameRenderer.java
+===================================================================
+diff --git a/src/thrones/game/GameRenderer.java b/src/thrones/game/GameRenderer.java
+--- a/src/thrones/game/GameRenderer.java	
++++ b/src/thrones/game/GameRenderer.java	
+@@ -44,7 +44,7 @@
+         this.game = game;
+     }
+ 
+-    public void renderhandLayouts(int nbPlayers, Hand[] hands) {
++    public void renderHandLayouts(int nbPlayers, Hand[] hands) {
+         RowLayout[] layouts = new RowLayout[nbPlayers];
+         for (int i = 0; i < nbPlayers; i++) {
+             layouts[i] = new RowLayout(handLocations[i], handWidth);

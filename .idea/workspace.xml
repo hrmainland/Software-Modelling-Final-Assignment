@@ -24,8 +24,8 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="Hugo's-branch" />
+      <map>=
+        <entry key="$PROJECT_DIR$" value="main" />=
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,7 +38,7 @@
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
-  </component>
+  </component>=
   <component name="RunManager">
     <configuration name="GameOfThrones" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
@@ -117,5 +117,44 @@
     <MESSAGE value="All player classes done" />
     <MESSAGE value="Fixed crashing at end of game bug" />
     <option name="LAST_COMMIT_MESSAGE" value="Fixed crashing at end of game bug" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fixed another issue with the starting with human" />
+    <MESSAGE value="deleting unnessecary code" />
+    <option name="LAST_COMMIT_MESSAGE" value="deleting unnessecary code" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+          <line>205</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+          <line>284</line>
+          <properties class="thrones.game.GameOfThrones">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/thrones/game/PropertiesLoader.java</url>
+          <line>11</line>
+          <properties class="thrones.game.PropertiesLoader" method="&lt;init&gt;">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

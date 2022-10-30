@@ -1,0 +1,307 @@
+Index: src/thrones/game/GameOfThrones.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package thrones.game;\n\n// Oh_Heaven.java\nimport ch.aplu.jcardgame.*;\nimport ch.aplu.jgamegrid.*;\n\nimport java.awt.Color;\nimport java.awt.Font;\nimport java.io.FileNotFoundException;\nimport java.io.FileReader;\nimport java.util.*;\nimport java.util.stream.Collectors;\n\n@SuppressWarnings(\"serial\")\npublic class GameOfThrones extends CardGame {\n\n    static public int seed;\n    static Random random;\n    private static int watchingTime;\n    private final String version = \"1.0\";\n    public final int nbPlayers = 4;\n    public final int nbStartCards = 9;\n    public final int nbPlays = 6;\n    public final int nbRounds = 3;\n    private Deck deck = new Deck(Suit.values(), Rank.values(), \"cover\");\n    private final GameRenderer gameRenderer = new GameRenderer(this);\n    private final BattleHandler battleHandler = new BattleHandler();\n    private Hand[] hands;\n    private Hand[] piles;\n    private final String[] playerTeams = { \"[Players 0 & 2]\", \"[Players 1 & 3]\"};\n    private int nextStartingPlayer = random.nextInt(nbPlayers);\n    private int[] scores = new int[nbPlayers];\n    // private boolean[] humanPlayers = { true, false, false, false};\n    private boolean[] humanPlayers = { false, false, false, false};\n    private Optional<Card> selected;\n    private final int NON_SELECTION_VALUE = -1;\n    private int selectedPileIndex = NON_SELECTION_VALUE;\n    private final int UNDEFINED_INDEX = -1;\n    private final int ATTACK_RANK_INDEX = 0;\n    private final int DEFENCE_RANK_INDEX = 1;\n\n    private PileCalculator pileCalculator;\n\n    enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }\n\n    public enum Suit {\n        SPADES(GoTSuit.DEFENCE),\n        HEARTS(GoTSuit.CHARACTER),\n        DIAMONDS(GoTSuit.MAGIC),\n        CLUBS(GoTSuit.ATTACK);\n\n        Suit(GoTSuit gotsuit) {\n            this.gotsuit = gotsuit;\n        }\n        private final GoTSuit gotsuit;\n\n        public boolean isDefence(){ return gotsuit == GoTSuit.DEFENCE; }\n\n        public boolean isAttack(){ return gotsuit == GoTSuit.ATTACK; }\n\n        public boolean isCharacter(){ return gotsuit == GoTSuit.CHARACTER; }\n\n        public boolean isMagic(){ return gotsuit == GoTSuit.MAGIC; }\n    }\n\n    public enum Rank {\n        // Reverse order of rank importance (see rankGreater() below)\n        // Order of cards is tied to card images\n        ACE(1),\n        KING(10),\n        QUEEN(10),\n        JACK(10),\n        TEN(10),\n        NINE(9),\n        EIGHT(8),\n        SEVEN(7),\n        SIX(6),\n        FIVE(5),\n        FOUR(4),\n        THREE(3),\n        TWO(2);\n        Rank(int rankValue) {\n            this.rankValue = rankValue;\n        }\n        private final int rankValue;\n        public int getRankValue() {\n            return rankValue;\n        }\n    }\n\n    /*\n    Canonical String representations of Suit, Rank, Card, and Hand\n    */\n    String canonical(Suit s) { return s.toString().substring(0, 1); }\n    String canonical(Rank r) {\n        switch (r) {\n            case ACE: case KING: case QUEEN: case JACK: case TEN:\n                return r.toString().substring(0, 1);\n            default:\n                return String.valueOf(r.getRankValue());\n        }\n    }\n    String canonical(Card c) { return canonical((Rank) c.getRank()) + canonical((Suit) c.getSuit()); }\n    String canonical(Hand h) {\n        return \"[\" + h.getCardList().stream().map(this::canonical).collect(Collectors.joining(\",\")) + \"]\";\n    }\n\n    // Draws a random card from the Hand, based on a random number generator\n    public static Card randomCard(Hand hand) {\n        assert !hand.isEmpty() : \" random card from empty hand.\";\n        int x = random.nextInt(hand.getNumberOfCards());\n        return hand.get(x);\n    }\n\n    /*\n     Deals out the entire pack of 52 cards without shuffling, removing aces,\n     and ensuring each player gets 3 heart cards and 9 non-hearts\n     */\n    private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer) {\n        Hand pack = deck.toHand(false);\n        assert pack.getNumberOfCards() == 52 : \" Starting pack is not 52 cards.\";\n        // Remove 4 Aces\n        List<Card> aceCards = pack.getCardsWithRank(Rank.ACE);\n        for (Card card : aceCards) {\n            card.removeFromHand(false);\n        }\n        assert pack.getNumberOfCards() == 48 : \" Pack without aces is not 48 cards.\";\n        // Give each player 3 heart cards\n        for (int i = 0; i < nbPlayers; i++) {\n            for (int j = 0; j < 3; j++) {\n                List<Card> heartCards = pack.getCardsWithSuit(Suit.HEARTS);\n                int x = random.nextInt(heartCards.size());\n                Card randomCard = heartCards.get(x);\n                randomCard.removeFromHand(false);\n                hands[i].insert(randomCard, false);\n            }\n        }\n        assert pack.getNumberOfCards() == 36 : \" Pack without aces and hearts is not 36 cards.\";\n        // Give each player 9 of the remaining cards\n        for (int i = 0; i < nbCardsPerPlayer; i++) {\n            for (int j = 0; j < nbPlayers; j++) {\n                assert !pack.isEmpty() : \" Pack has prematurely run out of cards.\";\n                Card dealt = randomCard(pack);\n                dealt.removeFromHand(false);\n                hands[j].insert(dealt, false);\n            }\n        }\n        for (int j = 0; j < nbPlayers; j++) {\n            assert hands[j].getNumberOfCards() == 12 : \" Hand does not have twelve cards.\";\n        }\n    }\n\n    private void initScore() {\n        for (int i = 0; i < nbPlayers; i++) {\n            scores[i] = 0;\n            gameRenderer.renderScores(i);\n        }\n        gameRenderer.renderPileText();\n    }\n\n    private void setupGame() {\n        hands = new Hand[nbPlayers];\n        pileCalculator = new PileCalculator();\n        for (int i = 0; i < nbPlayers; i++) {\n            hands[i] = new Hand(deck);\n        }\n        dealingOut(hands, nbPlayers, nbStartCards);\n\n        for (int i = 0; i < nbPlayers; i++) {\n            hands[i].sort(Hand.SortType.SUITPRIORITY, true);\n            System.out.println(\"hands[\" + i + \"]: \" + canonical(hands[i]));\n        }\n\n        for (final Hand currentHand : hands) {\n            // Set up human player for interaction\n            currentHand.addCardListener(new CardAdapter() {\n                public void leftDoubleClicked(Card card) {\n                    selected = Optional.of(card);\n                    currentHand.setTouchEnabled(false);\n                }\n                public void rightClicked(Card card) {\n                    selected = Optional.empty(); // Don't care which card we right-clicked for player to pass\n                    currentHand.setTouchEnabled(false);\n                }\n            });\n        }\n        // graphics\n        gameRenderer.renderhandLayouts(nbPlayers, hands);\n        // End graphics\n    }\n\n    private void pickACorrectSuit(int playerIndex, boolean isCharacter) {\n        Hand currentHand = hands[playerIndex];\n        List<Card> shortListCards = new ArrayList<>();\n        for (int i = 0; i < currentHand.getCardList().size(); i++) {\n            Card card = currentHand.getCardList().get(i);\n            Suit suit = (Suit) card.getSuit();\n            if (suit.isCharacter() == isCharacter) {\n                shortListCards.add(card);\n            }\n        }\n        if (shortListCards.isEmpty() || !isCharacter && random.nextInt(3) == 0) {\n            selected = Optional.empty();\n        } else {\n            selected = Optional.of(shortListCards.get(random.nextInt(shortListCards.size())));\n        }\n    }\n\n    private void selectRandomPile() {\n        selectedPileIndex = random.nextInt(2);\n    }\n\n    private void waitForCorrectSuit(int playerIndex, boolean isCharacter) {\n        if (hands[playerIndex].isEmpty()) {\n            selected = Optional.empty();\n        } else {\n            selected = null;\n            hands[playerIndex].setTouchEnabled(true);\n            do {\n                if (selected == null) {\n                    delay(100);\n                    continue;\n                }\n                Suit suit = selected.isPresent() ? (Suit) selected.get().getSuit() : null;\n                if (isCharacter && suit != null && suit.isCharacter() ||         // If we want character, can't pass and suit must be right\n                        !isCharacter && (suit == null || !suit.isCharacter())) { // If we don't want character, can pass or suit must not be character\n                    // if (suit != null && suit.isCharacter() == isCharacter) {\n                    break;\n                } else {\n                    selected = null;\n                    hands[playerIndex].setTouchEnabled(true);\n                }\n                delay(100);\n            } while (true);\n        }\n    }\n\n    private void waitForPileSelection() {\n        selectedPileIndex = NON_SELECTION_VALUE;\n        for (Hand pile : piles) {\n            pile.setTouchEnabled(true);\n        }\n        while(selectedPileIndex == NON_SELECTION_VALUE) {\n            delay(100);\n        }\n        for (Hand pile : piles) {\n            pile.setTouchEnabled(false);\n        }\n    }\n\n    private int getPlayerIndex(int index) {\n        return index % nbPlayers;\n    }\n\n    private void resetPile() {\n        if (piles != null) {\n            for (Hand pile : piles) {\n                pile.removeAll(true);\n            }\n        }\n        piles = new Hand[2];\n        for (int i = 0; i < 2; i++) {\n            piles[i] = new Hand(deck);\n            gameRenderer.renderPile(piles[i], i);\n            final Hand currentPile = piles[i];\n            final int pileIndex = i;\n            piles[i].addCardListener(new CardAdapter() {\n                public void leftClicked(Card card) {\n                    selectedPileIndex = pileIndex;\n                    currentPile.setTouchEnabled(false);\n                }\n            });\n        }\n\n        rankUpdater(piles);\n    }\n\n    private void executeAPlay() {\n        resetPile();\n\n        nextStartingPlayer = getPlayerIndex(nextStartingPlayer);\n        if (hands[nextStartingPlayer].getNumberOfCardsWithSuit(Suit.HEARTS) == 0)\n            nextStartingPlayer = getPlayerIndex(nextStartingPlayer + 1);\n        assert hands[nextStartingPlayer].getNumberOfCardsWithSuit(Suit.HEARTS) != 0 : \" Starting player has no hearts.\";\n\n        // 1: play the first 2 hearts\n        for (int i = 0; i < 2; i++) {\n            int playerIndex = getPlayerIndex(nextStartingPlayer + i);\n            setStatusText(\"Player \" + playerIndex + \" select a Heart card to play\");\n            if (humanPlayers[playerIndex]) {\n                waitForCorrectSuit(playerIndex, true);\n            } else {\n                pickACorrectSuit(playerIndex, true);\n            }\n\n            int pileIndex = playerIndex % 2;\n            assert selected.isPresent() : \" Pass returned on selection of character.\";\n            System.out.println(\"Player \" + playerIndex + \" plays \" + canonical(selected.get()) + \" on pile \" + pileIndex);\n            selected.get().setVerso(false);\n            selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)\n            rankUpdater(piles);\n        }\n\n        // 2: play the remaining nbPlayers * nbRounds - 2\n        int remainingTurns = nbPlayers * nbRounds - 2;\n        int nextPlayer = nextStartingPlayer + 2;\n\n        while(remainingTurns > 0) {\n            nextPlayer = getPlayerIndex(nextPlayer);\n            setStatusText(\"Player\" + nextPlayer + \" select a non-Heart card to play.\");\n            if (humanPlayers[nextPlayer]) {\n                waitForCorrectSuit(nextPlayer, false);\n            } else {\n                pickACorrectSuit(nextPlayer, false);\n            }\n\n            if (selected.isPresent()) {\n                setStatusText(\"Selected: \" + canonical(selected.get()) + \". Player\" + nextPlayer + \" select a pile to play the card.\");\n                if (humanPlayers[nextPlayer]) {\n                    waitForPileSelection();\n                } else {\n                    selectRandomPile();\n                }\n                System.out.println(\"Player \" + nextPlayer + \" plays \" + canonical(selected.get()) + \" on pile \" + selectedPileIndex);\n                selected.get().setVerso(false);\n                selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)\n                rankUpdater(piles);\n            } else {\n                setStatusText(\"Pass.\");\n            }\n            nextPlayer++;\n            remainingTurns--;\n        }\n\n        // 3: calculate winning & update scores for players\n        rankUpdater(piles);\n        int[] pile0Ranks = pileCalculator.calculatePileRanks(0, piles);\n        int[] pile1Ranks = pileCalculator.calculatePileRanks(1, piles);\n        gameRenderer.printStartBattleInfo(pile0Ranks, pile1Ranks,piles, ATTACK_RANK_INDEX, DEFENCE_RANK_INDEX);\n        scores = battleHandler.battle(pile0Ranks, pile1Ranks, scores, piles);\n        gameRenderer.reRenderScore(scores, playerTeams, nbPlayers);\n        gameRenderer.setStatusText(battleHandler.getCharacter0Result(), battleHandler.getCharacter1Result());\n\n        // 5: discarded all cards on the piles\n        nextStartingPlayer += 1;\n        delay(watchingTime);\n    }\n\n    public void rankUpdater(Hand[] piles){\n        ArrayList<int[]> bothRanks;\n        bothRanks = pileCalculator.updatePileRanks(piles);\n        for (int j = 0; j < piles.length; j++){\n            int[] ranks = bothRanks.get(j);\n            gameRenderer.updatePileRankState(j, ranks[ATTACK_RANK_INDEX], ranks[DEFENCE_RANK_INDEX], playerTeams);\n        }\n    }\n    public GameOfThrones() {\n        super(700, 700, 30);\n\n        setTitle(\"Game of Thrones (V\" + version + \") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)\");\n        setStatusText(\"Initializing...\");\n        initScore();\n\n        setupGame();\n        for (int i = 0; i < nbPlays; i++) {\n            executeAPlay();\n            gameRenderer.reRenderScore(scores, playerTeams, nbPlayers);\n        }\n\n        String text;\n        if (scores[0] > scores[1]) {\n            text = \"Players 0 and 2 won.\";\n        } else if (scores[0] == scores[1]) {\n            text = \"All players drew.\";\n        } else {\n            text = \"Players 1 and 3 won.\";\n        }\n        System.out.println(\"Result: \" + text);\n        setStatusText(text);\n\n        refresh();\n    }\n\n    public static void main(String[] args) throws FileNotFoundException {\n        //System.out.println(\"Working Directory = \" + System.getProperty(\"user.dir\"));\n        Properties properties = new Properties();\n        //properties.setProperty(\"watchingTime\", \"5000\");\n\n        if (args == null || args.length == 0) {\n            properties = PropertiesLoader.loadPropertiesFile(\"properties/smart.properties\");\n        } else {\n            properties = PropertiesLoader.loadPropertiesFile(args[0]);\n        }\n\n        String seedProp = properties.getProperty(\"seed\");  //Seed property\n        if (seedProp != null) { // Use property seed\n\t\t\t  seed = Integer.parseInt(seedProp);\n        } else { // and no property\n\t\t\t  seed = new Random().nextInt(); // so randomise\n        }\n\n        String watchingTimeProp = properties.getProperty(\"watchingTime\");\n        if (watchingTimeProp != null) { // Use property watching time\n            watchingTime = Integer.parseInt(watchingTimeProp);\n        } else { // and no property\n            watchingTime = 5000; // so use default\n        }\n\n        for (int i=0; i<4; i++) {\n            String playerType = properties.getProperty(\"players.\" + i);\n            if (playerType != null) {\n                // create players\n            } else {\n                // create default player\n            }\n        }\n        //GameOfThrones.seed = 130008;\n        System.out.println(\"Seed = \" + seed);\n        GameOfThrones.random = new Random(seed);\n        new GameOfThrones();\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/thrones/game/GameOfThrones.java b/src/thrones/game/GameOfThrones.java
+--- a/src/thrones/game/GameOfThrones.java	(revision 004a607754bc54deaa6e2f8ca9a66eda8a4bfbee)
++++ b/src/thrones/game/GameOfThrones.java	(date 1667033389759)
+@@ -41,6 +41,8 @@
+ 
+     private PileCalculator pileCalculator;
+ 
++    private static ArrayList<Player> playerList = new ArrayList<>();
++
+     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
+ 
+     public enum Suit {
+@@ -171,24 +173,19 @@
+             System.out.println("hands[" + i + "]: " + canonical(hands[i]));
+         }
+ 
+-        for (final Hand currentHand : hands) {
+-            // Set up human player for interaction
+-            currentHand.addCardListener(new CardAdapter() {
+-                public void leftDoubleClicked(Card card) {
+-                    selected = Optional.of(card);
+-                    currentHand.setTouchEnabled(false);
+-                }
+-                public void rightClicked(Card card) {
+-                    selected = Optional.empty(); // Don't care which card we right-clicked for player to pass
+-                    currentHand.setTouchEnabled(false);
+-                }
+-            });
+-        }
+         // graphics
+         gameRenderer.renderhandLayouts(nbPlayers, hands);
+         // End graphics
+     }
+ 
++    public Optional<Card> getSelected() {
++        return selected;
++    }
++
++    public void setSelected(Optional<Card> selected) {
++        this.selected = selected;
++    }
++
+     private void pickACorrectSuit(int playerIndex, boolean isCharacter) {
+         Hand currentHand = hands[playerIndex];
+         List<Card> shortListCards = new ArrayList<>();
+@@ -262,14 +259,6 @@
+         for (int i = 0; i < 2; i++) {
+             piles[i] = new Hand(deck);
+             gameRenderer.renderPile(piles[i], i);
+-            final Hand currentPile = piles[i];
+-            final int pileIndex = i;
+-            piles[i].addCardListener(new CardAdapter() {
+-                public void leftClicked(Card card) {
+-                    selectedPileIndex = pileIndex;
+-                    currentPile.setTouchEnabled(false);
+-                }
+-            });
+         }
+ 
+         rankUpdater(piles);
+@@ -277,6 +266,7 @@
+ 
+     private void executeAPlay() {
+         resetPile();
++        updatePlayers(true);
+ 
+         nextStartingPlayer = getPlayerIndex(nextStartingPlayer);
+         if (hands[nextStartingPlayer].getNumberOfCardsWithSuit(Suit.HEARTS) == 0)
+@@ -286,19 +276,26 @@
+         // 1: play the first 2 hearts
+         for (int i = 0; i < 2; i++) {
+             int playerIndex = getPlayerIndex(nextStartingPlayer + i);
++
+             setStatusText("Player " + playerIndex + " select a Heart card to play");
+-            if (humanPlayers[playerIndex]) {
+-                waitForCorrectSuit(playerIndex, true);
+-            } else {
+-                pickACorrectSuit(playerIndex, true);
+-            }
+ 
+-            int pileIndex = playerIndex % 2;
++            // currentPlayer chooses card, pile based on their in-class rules
++            Player currentPlayer = playerList.get(playerIndex);
++            int pileIndex = currentPlayer.getPile();
++            selected = currentPlayer.getBestCard();
++
++            // Print console message
+             assert selected.isPresent() : " Pass returned on selection of character.";
+             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
++
++            // Handle drawing / transfer logic
+             selected.get().setVerso(false);
+             selected.get().transfer(piles[pileIndex], true); // transfer to pile (includes graphic effect)
+             rankUpdater(piles);
++
++            // Update the state of every player to reflect move change
++            updatePlayers(false);
++
+         }
+ 
+         // 2: play the remaining nbPlayers * nbRounds - 2
+@@ -308,26 +305,25 @@
+         while(remainingTurns > 0) {
+             nextPlayer = getPlayerIndex(nextPlayer);
+             setStatusText("Player" + nextPlayer + " select a non-Heart card to play.");
+-            if (humanPlayers[nextPlayer]) {
+-                waitForCorrectSuit(nextPlayer, false);
+-            } else {
+-                pickACorrectSuit(nextPlayer, false);
+-            }
++
++            // currentPlayer chooses card, pile based on their in-class rules
++            Player currentPlayer = playerList.get(nextPlayer);
++            selected = currentPlayer.getBestCard();
+ 
+             if (selected.isPresent()) {
++                selectedPileIndex = currentPlayer.getPile();
+                 setStatusText("Selected: " + canonical(selected.get()) + ". Player" + nextPlayer + " select a pile to play the card.");
+-                if (humanPlayers[nextPlayer]) {
+-                    waitForPileSelection();
+-                } else {
+-                    selectRandomPile();
+-                }
+                 System.out.println("Player " + nextPlayer + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
+                 selected.get().setVerso(false);
+                 selected.get().transfer(piles[selectedPileIndex], true); // transfer to pile (includes graphic effect)
+                 rankUpdater(piles);
++
+             } else {
+                 setStatusText("Pass.");
+             }
++            // Update the state of every player to reflect move change
++            updatePlayers(false);
++
+             nextPlayer++;
+             remainingTurns--;
+         }
+@@ -346,6 +342,12 @@
+         delay(watchingTime);
+     }
+ 
++    private void updatePlayers(boolean newRound){
++        for (int j=0; j<nbPlayers; j++) {
++            playerList.get(j).updateState(hands[j], piles, newRound);
++        }
++    }
++
+     public void rankUpdater(Hand[] piles){
+         ArrayList<int[]> bothRanks;
+         bothRanks = pileCalculator.updatePileRanks(piles);
+@@ -383,20 +385,29 @@
+ 
+     public static void main(String[] args) throws FileNotFoundException {
+         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
+-        Properties properties = new Properties();
+-        //properties.setProperty("watchingTime", "5000");
++        Properties properties;
+ 
+         if (args == null || args.length == 0) {
+-            properties = PropertiesLoader.loadPropertiesFile("properties/smart.properties");
++            properties = PropertiesLoader.loadPropertiesFile("properties/onlysmart.properties");
+         } else {
+             properties = PropertiesLoader.loadPropertiesFile(args[0]);
+         }
+ 
++        initialiseGameProperties(properties);
++
++        System.out.println("Seed = " + seed);
++        GameOfThrones.random = new Random(seed);
++        new GameOfThrones();
++    }
++
++    private static void initialiseGameProperties(Properties properties) {
++        PlayerFactory playerFactory = new PlayerFactory();
++
+         String seedProp = properties.getProperty("seed");  //Seed property
+         if (seedProp != null) { // Use property seed
+-			  seed = Integer.parseInt(seedProp);
++            seed = Integer.parseInt(seedProp);
+         } else { // and no property
+-			  seed = new Random().nextInt(); // so randomise
++            seed = new Random().nextInt(); // so randomise
+         }
+ 
+         String watchingTimeProp = properties.getProperty("watchingTime");
+@@ -408,16 +419,8 @@
+ 
+         for (int i=0; i<4; i++) {
+             String playerType = properties.getProperty("players." + i);
+-            if (playerType != null) {
+-                // create players
+-            } else {
+-                // create default player
+-            }
+-        }
+-        //GameOfThrones.seed = 130008;
+-        System.out.println("Seed = " + seed);
+-        GameOfThrones.random = new Random(seed);
+-        new GameOfThrones();
+-    }
++            playerList.add(playerFactory.getPlayer(playerType, i));
++        }
++    }
++}
+ 
+-}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"bc72c28b-5467-4e73-b697-1627d65b1357\" name=\"Changes\" comment=\"\">\n      <change afterPath=\"$PROJECT_DIR$/src/thrones/game/GameRenderer.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/GameOfThrones.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/GameOfThrones.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/PileHandler.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/PileCalculator.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/RenderingFacade.java\" beforeDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2GfJPcrDFBpyQuBxANSfmdY6IOE\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,\n    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,\n    &quot;project.structure.proportion&quot;: &quot;0.14648438&quot;,\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;\n  }\n}</component>\n  <component name=\"RunManager\">\n    <configuration name=\"GameOfThrones\" type=\"Application\" factoryName=\"Application\" nameIsGenerated=\"true\">\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"17\" />\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"thrones.game.GameOfThrones\" />\n      <module name=\"SWEN30006_Assignment_2\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"thrones.game.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"JetRunConfigurationType\">\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"KotlinStandaloneScriptRunConfigurationType\">\n      <option name=\"filePath\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"bc72c28b-5467-4e73-b697-1627d65b1357\" name=\"Changes\" comment=\"\" />\n      <created>1666773681486</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1666773681486</updated>\n    </task>\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 004a607754bc54deaa6e2f8ca9a66eda8a4bfbee)
++++ b/.idea/workspace.xml	(date 1667033393912)
+@@ -2,11 +2,9 @@
+ <project version="4">
+   <component name="ChangeListManager">
+     <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="">
+-      <change afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/PileHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/RenderingFacade.java" beforeDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -21,6 +19,11 @@
+     </option>
+   </component>
+   <component name="Git.Settings">
++    <option name="RECENT_BRANCH_BY_REPOSITORY">
++      <map>
++        <entry key="$PROJECT_DIR$" value="main" />
++      </map>
++    </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+@@ -92,4 +95,38 @@
+       </map>
+     </option>
+   </component>
++  <component name="XDebuggerManager">
++    <breakpoint-manager>
++      <breakpoints>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>13</line>
++          <option name="timeStamp" value="1" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-line">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>278</line>
++          <option name="timeStamp" value="3" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-method">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>277</line>
++          <properties class="thrones.game.GameOfThrones">
++            <option name="EMULATED" value="true" />
++            <option name="WATCH_EXIT" value="false" />
++          </properties>
++          <option name="timeStamp" value="2" />
++        </line-breakpoint>
++        <line-breakpoint enabled="true" type="java-method">
++          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
++          <line>356</line>
++          <properties class="thrones.game.GameOfThrones">
++            <option name="EMULATED" value="true" />
++            <option name="WATCH_EXIT" value="false" />
++          </properties>
++          <option name="timeStamp" value="4" />
++        </line-breakpoint>
++      </breakpoints>
++    </breakpoint-manager>
++  </component>
+ </project>
+\ No newline at end of file
+Index: src/thrones/game/BattleHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package thrones.game;\nimport ch.aplu.jcardgame.Hand;\n\n/**\n * Simple class that handles the battling of piles and prints results to the console\n */\n\npublic class BattleHandler {\n\n    private final static int ATTACK_RANK_INDEX = 0;\n    private final static int DEFENCE_RANK_INDEX = 1;\n    private final static int CHARACTER_CARD = 0;\n    private final static int PLAYER_ZERO = 0;\n    private final static int PLAYER_ONE = 1;\n    private String character0Result;\n    private String character1Result;\n\n    public BattleHandler() {}\n\n    // Major method call, used to execute battle sequence\n    public int[] battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {\n        GameOfThrones.Rank pile0CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ZERO].getCardList().get(CHARACTER_CARD).getRank();\n        GameOfThrones.Rank pile1CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ONE].getCardList().get(CHARACTER_CARD).getRank();\n        String character0Result;\n        String character1Result;\n\n        if (pile0Ranks[ATTACK_RANK_INDEX] > pile1Ranks[DEFENCE_RANK_INDEX]) {\n            scores[0] += pile1CharacterRank.getRankValue();\n            scores[2] += pile1CharacterRank.getRankValue();\n            character0Result = \"Character 0 attack on character 1 succeeded.\";\n        } else {\n            scores[1] += pile1CharacterRank.getRankValue();\n            scores[3] += pile1CharacterRank.getRankValue();\n            character0Result = \"Character 0 attack on character 1 failed.\";\n        }\n\n        if (pile1Ranks[ATTACK_RANK_INDEX] > pile0Ranks[DEFENCE_RANK_INDEX]) {\n            scores[1] += pile0CharacterRank.getRankValue();\n            scores[3] += pile0CharacterRank.getRankValue();\n            character1Result = \"Character 1 attack on character 0 succeeded.\";\n        } else {\n            scores[0] += pile0CharacterRank.getRankValue();\n            scores[2] += pile0CharacterRank.getRankValue();\n            character1Result = \"Character 1 attack character 0 failed.\";\n        }\n        //renderingFacade.updateScores();\n        System.out.println(character0Result);\n        System.out.println(character1Result);\n        return scores;\n        //renderingFacade.setStatusText(character0Result, character1Result);\n    }\n\n    public String getCharacter0Result(){\n        return character0Result;\n    }\n    public String getCharacter1Result(){\n        return character1Result;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/thrones/game/BattleHandler.java b/src/thrones/game/BattleHandler.java
+--- a/src/thrones/game/BattleHandler.java	(revision 004a607754bc54deaa6e2f8ca9a66eda8a4bfbee)
++++ b/src/thrones/game/BattleHandler.java	(date 1667033389792)
+@@ -21,8 +21,6 @@
+     public int[] battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {
+         GameOfThrones.Rank pile0CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ZERO].getCardList().get(CHARACTER_CARD).getRank();
+         GameOfThrones.Rank pile1CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ONE].getCardList().get(CHARACTER_CARD).getRank();
+-        String character0Result;
+-        String character1Result;
+ 
+         if (pile0Ranks[ATTACK_RANK_INDEX] > pile1Ranks[DEFENCE_RANK_INDEX]) {
+             scores[0] += pile1CharacterRank.getRankValue();
