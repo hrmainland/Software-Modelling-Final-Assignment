@@ -88,6 +88,13 @@ public class HumanPlayer implements Player{
 
     @Override
     public int getPile() {
+        if (bestCard.isPresent()) {
+            GameOfThrones.Suit bestCardSuit = (GameOfThrones.Suit) bestCard.get().getSuit();
+            if (bestCardSuit.isCharacter()) {
+                pile = playerIndex % 2;
+                return pile;
+            }
+        }
         pile = NON_SELECTION_VALUE;
         for (Hand pile : piles) {
             pile.setTouchEnabled(true);
