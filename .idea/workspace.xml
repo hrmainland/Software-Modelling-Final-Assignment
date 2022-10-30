@@ -4,15 +4,7 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="Fixed crashing at end of game bug">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/HumanPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/HumanPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/PlayerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PlayerFactory.java" afterDir="false" />
-    </list>
+    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="added commenting" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667034566212</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="added commenting">
+      <created>1667105475244</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1667105475244</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -119,7 +118,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed another issue with the starting with human" />
     <MESSAGE value="deleting unnessecary code" />
-    <option name="LAST_COMMIT_MESSAGE" value="deleting unnessecary code" />
+    <MESSAGE value="added commenting" />
+    <option name="LAST_COMMIT_MESSAGE" value="added commenting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -145,7 +145,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/thrones/game/PropertiesLoader.java</url>
-          <line>11</line>
+          <line>13</line>
           <properties class="thrones.game.PropertiesLoader" method="&lt;init&gt;">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
