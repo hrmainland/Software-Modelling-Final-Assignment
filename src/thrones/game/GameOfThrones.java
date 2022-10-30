@@ -93,7 +93,7 @@ public class GameOfThrones extends CardGame {
         }
     }
 
-    /*
+    /**
     Canonical String representations of Suit, Rank, Card, and Hand
     */
     String canonical(Suit s) { return s.toString().substring(0, 1); }

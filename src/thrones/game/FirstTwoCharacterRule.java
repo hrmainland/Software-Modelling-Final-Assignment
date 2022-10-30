@@ -5,8 +5,10 @@ import ch.aplu.jcardgame.Hand;
 
 import java.util.Optional;
 
+/**
+ * method that implements that the first two cards must be hearts
+ */
 public class FirstTwoCharacterRule implements GameRule{
-
     /**
      * Checks to see if the current card-pile combination is valid given the rule represented.
      * Throws BrokeRuleException if invalid

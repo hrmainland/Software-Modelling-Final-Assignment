@@ -17,7 +17,9 @@ public class BattleHandler {
 
     public BattleHandler() {}
 
-    // Major method call, used to execute battle sequence
+    /**
+     * Major method call, used to execute battle sequence
+     */
     public int[] battle(int[] pile0Ranks, int[] pile1Ranks, int[] scores, Hand[] piles) {
         GameOfThrones.Rank pile0CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ZERO].getCardList().get(CHARACTER_CARD).getRank();
         GameOfThrones.Rank pile1CharacterRank = (GameOfThrones.Rank) piles[PLAYER_ONE].getCardList().get(CHARACTER_CARD).getRank();
