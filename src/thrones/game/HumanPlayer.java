@@ -16,8 +16,6 @@ public class HumanPlayer implements Player{
     private Hand hand;
     private int playerIndex;
     private boolean firstTwoCards = true;
-    private boolean firstPass = true;
-
 
     public HumanPlayer(int playerIndex) {
         this.playerIndex = playerIndex;
