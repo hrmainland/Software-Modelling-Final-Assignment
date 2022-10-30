@@ -9,6 +9,13 @@ public class DiamondOnHeartRule implements GameRule {
     public DiamondOnHeartRule() {
     }
 
+    /**
+     * Checks to see if the current card-pile combination is valid given the rule represented.
+     * Throws BrokeRuleException if invalid
+     * @param card card in question
+     * @param pile pile in question
+     * @throws BrokeRuleException
+     */
     @Override
     public void isValid(Optional<Card> card, Hand pile) throws BrokeRuleException {
         GameOfThrones.Suit cardSuit = (GameOfThrones.Suit) card.get().getSuit();
