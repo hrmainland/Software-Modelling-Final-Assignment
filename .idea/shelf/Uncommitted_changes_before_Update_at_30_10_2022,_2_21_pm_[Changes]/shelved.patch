@@ -1,0 +1,170 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"bc72c28b-5467-4e73-b697-1627d65b1357\" name=\"Changes\" comment=\"Fixed crashing at end of game bug\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/misc.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/misc.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/GameOfThrones.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/GameOfThrones.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/Player.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/Player.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/RandomPlayer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/RandomPlayer.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/SimplePlayer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/SimplePlayer.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/thrones/game/SmartPlayer.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/thrones/game/SmartPlayer.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>=\n        <entry key=\"$PROJECT_DIR$\" value=\"main\" />=\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"ProjectId\" id=\"2GfJPcrDFBpyQuBxANSfmdY6IOE\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>=\n  <component name=\"RunManager\">\n    <configuration name=\"GameOfThrones\" type=\"Application\" factoryName=\"Application\" nameIsGenerated=\"true\">\n      <option name=\"ALTERNATIVE_JRE_PATH\" value=\"17\" />\n      <option name=\"ALTERNATIVE_JRE_PATH_ENABLED\" value=\"true\" />\n      <option name=\"MAIN_CLASS_NAME\" value=\"thrones.game.GameOfThrones\" />\n      <module name=\"SWEN30006_Assignment_2\" />\n      <extension name=\"coverage\">\n        <pattern>\n          <option name=\"PATTERN\" value=\"thrones.game.*\" />\n          <option name=\"ENABLED\" value=\"true\" />\n        </pattern>\n      </extension>\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"JetRunConfigurationType\">\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n    <configuration default=\"true\" type=\"KotlinStandaloneScriptRunConfigurationType\">\n      <option name=\"filePath\" />\n      <method v=\"2\">\n        <option name=\"Make\" enabled=\"true\" />\n      </method>\n    </configuration>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"bc72c28b-5467-4e73-b697-1627d65b1357\" name=\"Changes\" comment=\"\" />\n      <created>1666773681486</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1666773681486</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"Human player half done\">\n      <created>1667032170156</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1667032170156</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"All player classes done\">\n      <created>1667033155846</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1667033155846</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"Fixed crashing at end of game bug\">\n      <created>1667034566212</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1667034566212</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"4\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n    <option name=\"oldMeFiltersMigrated\" value=\"true\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"Human player half done\" />\n    <MESSAGE value=\"All player classes done\" />\n    <MESSAGE value=\"Fixed crashing at end of game bug\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Fixed crashing at end of game bug\" />\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"fixed another issue with the starting with human\" />\n    <MESSAGE value=\"deleting unnessecary code\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"deleting unnessecary code\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>\n          <line>13</line>\n          <option name=\"timeStamp\" value=\"1\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\n          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>\n          <line>205</line>\n          <option name=\"timeStamp\" value=\"7\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\n          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>\n          <line>284</line>\n          <properties class=\"thrones.game.GameOfThrones\">\n            <option name=\"EMULATED\" value=\"true\" />\n            <option name=\"WATCH_EXIT\" value=\"false\" />\n          </properties>\n          <option name=\"timeStamp\" value=\"4\" />\n        </line-breakpoint>\n        <line-breakpoint enabled=\"true\" type=\"java-method\">\n          <url>file://$PROJECT_DIR$/src/thrones/game/PropertiesLoader.java</url>\n          <line>11</line>\n          <properties class=\"thrones.game.PropertiesLoader\" method=\"&lt;init&gt;\">\n            <option name=\"EMULATED\" value=\"true\" />\n            <option name=\"WATCH_EXIT\" value=\"false\" />\n          </properties>\n          <option name=\"timeStamp\" value=\"9\" />\n        </line-breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision aeade5438435fc9d1d8ffcbf72378e23433be4c0)
++++ b/.idea/workspace.xml	(date 1667099235940)
+@@ -1,14 +1,9 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ChangeListManager">
+-    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="Fixed crashing at end of game bug">
++    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="deleting unnessecary code">
+       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/Player.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/RandomPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/RandomPlayer.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/SimplePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/SimplePlayer.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/thrones/game/SmartPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/SmartPlayer.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -24,8 +19,8 @@
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_BRANCH_BY_REPOSITORY">
+-      <map>=
+-        <entry key="$PROJECT_DIR$" value="main" />=
++      <map>
++        <entry key="$PROJECT_DIR$" value="scott's-branch" />
+       </map>
+     </option>
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+@@ -34,11 +29,22 @@
+     <option name="stateVersion" value="1" />
+   </component>
+   <component name="ProjectId" id="2GfJPcrDFBpyQuBxANSfmdY6IOE" />
+-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+-  </component>=
++  </component>
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
++    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
++    &quot;project.structure.proportion&quot;: &quot;0.14648438&quot;,
++    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.tabs&quot;
++  }
++}</component>
+   <component name="RunManager">
+     <configuration name="GameOfThrones" type="Application" factoryName="Application" nameIsGenerated="true">
+       <option name="ALTERNATIVE_JRE_PATH" value="17" />
+@@ -76,28 +82,21 @@
+       <option name="presentableId" value="Default" />
+       <updated>1666773681486</updated>
+     </task>
+-    <task id="LOCAL-00001" summary="Human player half done">
+-      <created>1667032170156</created>
++    <task id="LOCAL-00001" summary="fixed another issue with the starting with human">
++      <created>1667037048655</created>
+       <option name="number" value="00001" />
+       <option name="presentableId" value="LOCAL-00001" />
+       <option name="project" value="LOCAL" />
+-      <updated>1667032170156</updated>
++      <updated>1667037048655</updated>
+     </task>
+-    <task id="LOCAL-00002" summary="All player classes done">
+-      <created>1667033155846</created>
++    <task id="LOCAL-00002" summary="deleting unnessecary code">
++      <created>1667043498698</created>
+       <option name="number" value="00002" />
+       <option name="presentableId" value="LOCAL-00002" />
+       <option name="project" value="LOCAL" />
+-      <updated>1667033155846</updated>
+-    </task>
+-    <task id="LOCAL-00003" summary="Fixed crashing at end of game bug">
+-      <created>1667034566212</created>
+-      <option name="number" value="00003" />
+-      <option name="presentableId" value="LOCAL-00003" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1667034566212</updated>
++      <updated>1667043498698</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -110,51 +109,10 @@
+         </entry>
+       </map>
+     </option>
+-    <option name="oldMeFiltersMigrated" value="true" />
+-  </component>
+-  <component name="VcsManagerConfiguration">
+-    <MESSAGE value="Human player half done" />
+-    <MESSAGE value="All player classes done" />
+-    <MESSAGE value="Fixed crashing at end of game bug" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Fixed crashing at end of game bug" />
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="fixed another issue with the starting with human" />
+     <MESSAGE value="deleting unnessecary code" />
+     <option name="LAST_COMMIT_MESSAGE" value="deleting unnessecary code" />
+   </component>
+-  <component name="XDebuggerManager">
+-    <breakpoint-manager>
+-      <breakpoints>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+-          <line>13</line>
+-          <option name="timeStamp" value="1" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-line">
+-          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+-          <line>205</line>
+-          <option name="timeStamp" value="7" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-method">
+-          <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
+-          <line>284</line>
+-          <properties class="thrones.game.GameOfThrones">
+-            <option name="EMULATED" value="true" />
+-            <option name="WATCH_EXIT" value="false" />
+-          </properties>
+-          <option name="timeStamp" value="4" />
+-        </line-breakpoint>
+-        <line-breakpoint enabled="true" type="java-method">
+-          <url>file://$PROJECT_DIR$/src/thrones/game/PropertiesLoader.java</url>
+-          <line>11</line>
+-          <properties class="thrones.game.PropertiesLoader" method="&lt;init&gt;">
+-            <option name="EMULATED" value="true" />
+-            <option name="WATCH_EXIT" value="false" />
+-          </properties>
+-          <option name="timeStamp" value="9" />
+-        </line-breakpoint>
+-      </breakpoints>
+-    </breakpoint-manager>
+-  </component>
+ </project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_16\" project-jdk-name=\"17\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/out\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision aeade5438435fc9d1d8ffcbf72378e23433be4c0)
++++ b/.idea/misc.xml	(date 1667098775640)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_16" project-jdk-name="17" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/out" />
+   </component>
+ </project>
+\ No newline at end of file

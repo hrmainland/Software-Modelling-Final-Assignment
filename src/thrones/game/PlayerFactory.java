@@ -1,10 +1,19 @@
 package thrones.game;
 
+/**
+ * class that creates all instances of players
+ */
 public class PlayerFactory {
 
     public PlayerFactory() {
     }
 
+    /**
+     * Returns instance of Player given the string extracted from the properties file
+     * @param playerType string indicating player type
+     * @param playerIndex Index of the player being created
+     * @return instance of Player
+     */
     public Player getPlayer(String playerType, int playerIndex) {
         Player player;
         switch (playerType) {

@@ -93,7 +93,7 @@ public class GameOfThrones extends CardGame {
         }
     }
 
-    /*
+    /**
     Canonical String representations of Suit, Rank, Card, and Hand
     */
     String canonical(Suit s) { return s.toString().substring(0, 1); }
@@ -342,12 +342,21 @@ public class GameOfThrones extends CardGame {
 
     }
 
+    /**
+     * Updates all players of the current piles and their individual hands.
+     * Core method for the observer pattern
+     * @param newRound true if start of a new round, false otherwise
+     */
     private void updatePlayers(boolean newRound){
         for (int j=0; j<NUM_PLAYERS; j++) {
             playerList.get(j).updateState(hands[j], piles, newRound);
         }
     }
 
+    /**
+     * Driver code for aggregating the pile rank/scores and sending that information to the renderer class
+     * @param piles piles to be updated and rendered
+     */
     public void rankUpdater(Hand[] piles){
         ArrayList<int[]> bothRanks;
         bothRanks = pileCalculator.updatePileRanks(piles);
@@ -357,6 +366,10 @@ public class GameOfThrones extends CardGame {
         }
     }
 
+    /**
+     * Driver code for high level game logic
+     * @throws BrokeRuleException
+     */
     public GameOfThrones() throws BrokeRuleException {
         super(700, 700, 30);
 
@@ -385,6 +398,12 @@ public class GameOfThrones extends CardGame {
         refresh();
     }
 
+    /**
+     * Driver code for extracting properties and creating GameOfThrones class
+     * @param args argument used for entering path to properties file
+     * @throws FileNotFoundException
+     * @throws BrokeRuleException
+     */
     public static void main(String[] args) throws FileNotFoundException, BrokeRuleException {
         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
         Properties properties;
@@ -402,8 +421,11 @@ public class GameOfThrones extends CardGame {
         new GameOfThrones();
     }
 
+    /**
+     * Initialised the properties for the game
+     * @param properties properties object read from properties file
+     */
     private static void initialiseGameProperties(Properties properties) {
-
         String seedProp = properties.getProperty("seed");  //Seed property
         if (seedProp != null) { // Use property seed
             seed = Integer.parseInt(seedProp);
