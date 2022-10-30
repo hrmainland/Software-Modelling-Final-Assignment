@@ -247,7 +247,6 @@ public class GameOfThrones extends CardGame {
         Player currentPlayer = playerList.get(playerIndex);
         selected = currentPlayer.getBestCard();
         selectedPileIndex = currentPlayer.getPile();
-//        pileIndex = playerIndex % NUM_PILES;
         validateMove(selected, selectedPileIndex);
 
         // Print console message
