@@ -6,6 +6,10 @@ import ch.aplu.jcardgame.Hand;
 import java.util.ArrayList;
 import java.util.Optional;
 
+/**
+ * child class that extends the random player and contains all the logic
+ * of simple player
+ */
 public class SimplePlayer extends RandomPlayer{
     private int myPile;
     //private final Hand[] default_pile = new Hand[1];
@@ -14,6 +18,8 @@ public class SimplePlayer extends RandomPlayer{
         super(playerIndex);
         myPile = super.getPlayerIndex() % 2;
     }
+
+    // adds simple player logic
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
         super.updateState(hand, piles, newRound);
         if (super.getTotalCardsPlayed(piles) >=2) {
@@ -21,6 +27,7 @@ public class SimplePlayer extends RandomPlayer{
         }
     }
 
+    // function to calculate if the best move helps the opposition
     private void dontHelpOpponent(){
         if (super.getBestCard().isPresent()){
             GameOfThrones.Suit cardSuit = (GameOfThrones.Suit) super.getBestCard().get().getSuit();

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class that contains all the logic of randomPlayer
+ */
 public class RandomPlayer implements Player{
     private final int playerIndex;
     private Optional<Card> bestCard;
@@ -16,6 +19,7 @@ public class RandomPlayer implements Player{
         this.playerIndex = playerIndex;
     }
 
+    // universal method to update what the player would do
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        play heart if one of first two cards
@@ -28,6 +32,7 @@ public class RandomPlayer implements Player{
         }
     }
 
+    // method to determine how many plays have been made
     public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
@@ -54,6 +59,7 @@ public class RandomPlayer implements Player{
         this.bestCard = bestCard;
     }
 
+    // contains all the logic to get the card that the random player wants to play
     private void updateBestCard(Hand hand, boolean isCharacter) {
         List<Card> shortListCards = new ArrayList<>();
         for (int i = 0; i < hand.getCardList().size(); i++) {
@@ -81,6 +87,7 @@ public class RandomPlayer implements Player{
         pile = GameOfThrones.getRandom().nextInt(2);
     }
 
+    // determines if we have a legal move
     private void validateMove(Hand[] piles){
         if (bestCard.isPresent()){
             ArrayList<Card> pileCards = piles[pile].getCardList();

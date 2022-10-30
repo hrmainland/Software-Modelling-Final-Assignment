@@ -23,6 +23,7 @@ public class PileCalculator {
         return instance;
     }
 
+    // method that loops through and returns the pile ranks in an array
     public ArrayList<int[]> updatePileRanks(Hand[] piles) {
         ArrayList<int[]> allRanks = new ArrayList<>();
         for (int j = 0; j < piles.length; j++) {

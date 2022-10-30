@@ -8,6 +8,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
+/**
+ * contains all the logic required for SmartPlayer
+ */
 public class SmartPlayer implements Player {
     private final int ATTACK_RANK_INDEX = 0;
     private final int DEFENCE_RANK_INDEX = 1;
@@ -26,6 +29,7 @@ public class SmartPlayer implements Player {
         magicCardsPlayed = new ArrayList<Card>();
     }
 
+    // updates the smart player class
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        update magic cards played
@@ -43,6 +47,7 @@ public class SmartPlayer implements Player {
         setCardAndPile(hand, piles,totalCardsPlayed < 2);
     }
 
+    // logic that determines if the player can make an impact on the round outcome and makes that move
     private void setCardAndPile(Hand hand, Hand[] piles, boolean isCharacter){
 //        partition cards
         ArrayList<GameOfThrones.Suit> heartSuit = new ArrayList<>(Collections.singletonList(GameOfThrones.Suit.HEARTS));
@@ -130,6 +135,7 @@ public class SmartPlayer implements Player {
         bestCard = Optional.empty();
     }
 
+    // clones the hand into an arrayList
     private ArrayList<Card> cloneHandAsList(Hand hand){
         ArrayList<Card> handClone = new ArrayList<>();
         for (Card card : hand.getCardList()){
@@ -149,6 +155,7 @@ public class SmartPlayer implements Player {
         return pile;
     }
 
+    // calculates the total cards played
     public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
@@ -157,6 +164,7 @@ public class SmartPlayer implements Player {
         return totalCardsPlayed;
     }
 
+    // sorts the arrayList into it's different suits
     private ArrayList<Card> getCardPartition(Hand hand, ArrayList<GameOfThrones.Suit> suits){
         ArrayList<Card> partition = new ArrayList<>();
         for (int i = 0; i < hand.getCardList().size(); i++) {
@@ -169,6 +177,7 @@ public class SmartPlayer implements Player {
         return partition;
     }
 
+    // uses the pileCalculator to determine the results of the game
     private boolean[] attackDefenceResults(ArrayList<Card> myPile, ArrayList<Card> oppPile){
         int[] myResults = pileCalculator.pileRanksByList(myPile);
         int[] oppResults = pileCalculator.pileRanksByList(oppPile);

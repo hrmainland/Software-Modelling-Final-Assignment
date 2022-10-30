@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="3" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="Fixed crashing at end of game bug">
-      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/thrones/game/HumanPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/HumanPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/PlayerFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PlayerFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,8 +27,10 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>=
-        <entry key="$PROJECT_DIR$" value="main" />=
+      <map>
+        =
+        <entry key="$PROJECT_DIR$" value="main" />
+        =
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -33,7 +43,7 @@
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
-  </component>=
+  </component>
   <component name="RunManager">
     <configuration name="GameOfThrones" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="ALTERNATIVE_JRE_PATH" value="17" />
@@ -100,30 +110,11 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="origin/move-simplify" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Human player half done" />
-    <MESSAGE value="All player classes done" />
-    <MESSAGE value="Fixed crashing at end of game bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed crashing at end of game bug" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixed another issue with the starting with human" />
@@ -140,12 +131,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
-          <line>205</line>
+          <line>209</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/thrones/game/GameOfThrones.java</url>
-          <line>284</line>
+          <line>269</line>
           <properties class="thrones.game.GameOfThrones">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
