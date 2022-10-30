@@ -4,6 +4,10 @@ import ch.aplu.jcardgame.*;
 
 import java.util.Optional;
 
+/**
+ * class that contains all the logic for the human player
+ */
+
 public class HumanPlayer implements Player{
     private final int NON_SELECTION_VALUE = -1;
     private Optional<Card> bestCard;
@@ -12,13 +16,12 @@ public class HumanPlayer implements Player{
     private Hand hand;
     private int playerIndex;
     private boolean firstTwoCards = true;
-    private boolean firstPass = true;
-
 
     public HumanPlayer(int playerIndex) {
         this.playerIndex = playerIndex;
     }
 
+    // mehtod that processes all the input from the user
     private void setupListener(Hand hand, Hand[] piles){
         // Set up human player for interaction
         hand.addCardListener(new CardAdapter() {
@@ -44,6 +47,7 @@ public class HumanPlayer implements Player{
         }
     }
 
+    // method that resets the class
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
         this.hand = hand;
@@ -54,6 +58,7 @@ public class HumanPlayer implements Player{
         firstTwoCards = getTotalCardsPlayed(piles) < 2;
     }
 
+    // logic behind selecting the card to play
     @Override
     public Optional<Card> getBestCard() {
         if (hand.isEmpty()) {
@@ -81,6 +86,7 @@ public class HumanPlayer implements Player{
         return bestCard;
     }
 
+    // method that determines the total number of cards played
     public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
@@ -89,6 +95,7 @@ public class HumanPlayer implements Player{
         return totalCardsPlayed;
     }
 
+    // method to return the pile that the human wants to add to
     @Override
     public int getPile() {
         if (bestCard.isPresent()) {

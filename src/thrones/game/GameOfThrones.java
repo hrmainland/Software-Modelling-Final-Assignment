@@ -6,6 +6,10 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Entry Point to GameOfThrones, providing methods that facilitate the initialisation, running and resetting of
+ * the game interface.
+ */
 @SuppressWarnings("serial")
 public class GameOfThrones extends CardGame {
 
@@ -39,6 +43,7 @@ public class GameOfThrones extends CardGame {
 
 
     private static ArrayList<Player> playerList = new ArrayList<>();
+    private static ArrayList<GameRule> rules = new ArrayList<>();
     private static final PlayerFactory playerFactory = new PlayerFactory();
 
     enum GoTSuit { CHARACTER, DEFENCE, ATTACK, MAGIC }
@@ -105,16 +110,21 @@ public class GameOfThrones extends CardGame {
         return "[" + h.getCardList().stream().map(this::canonical).collect(Collectors.joining(",")) + "]";
     }
 
-    // Draws a random card from the Hand, based on a random number generator
+    /**
+     * Draws a random card from the Hand, based on a random number generator
+     * @param hand The hand from which the random card is drawn
+     * @return A Card object
+     */
     public static Card randomCard(Hand hand) {
         assert !hand.isEmpty() : " random card from empty hand.";
         int x = random.nextInt(hand.getNumberOfCards());
         return hand.get(x);
     }
 
-    /*
-     Deals out the entire pack of 52 cards without shuffling, removing aces,
-     and ensuring each player gets 3 heart cards and 9 non-hearts
+    /**
+     * Deals out the entire pack of 52 cards without shuffling, removing aces,
+     * and ensuring each player gets 3 heart cards and 9 non-hearts
+     * @param hands the array of hands for which cards are to be dealt into
      */
     private void dealingOut(Hand[] hands) {
         Hand pack = DECK.toHand(false);
@@ -152,6 +162,10 @@ public class GameOfThrones extends CardGame {
         }
     }
 
+    /**
+     * Calls GameRenderer methods that draw the initial score
+     * for each player and pile ranks to the GUI
+     */
     private void initScore() {
         for (int i = 0; i < NUM_PLAYERS; i++) {
             scores[i] = 0;
@@ -160,6 +174,10 @@ public class GameOfThrones extends CardGame {
         gameRenderer.renderPileText();
     }
 
+    /**
+     * Responsible for initial setup of player hands,
+     * and calls a GameRenderer method that draws them to the screen
+     */
     private void setupGame() {
 
         // Initialise Hands
@@ -183,6 +201,10 @@ public class GameOfThrones extends CardGame {
         return index % NUM_PLAYERS;
     }
 
+    /**
+     * Removes all cards from each pile, re-instantiates the piles array,
+     * and renders the new object to the GUI
+     */
     private void resetPile() {
         if (piles != null) {
             for (Hand pile : piles) {
@@ -198,6 +220,11 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
     }
 
+    /**
+     * Responsible for iterating through player objects and calling on them to play a card
+     * according to the game rules.
+     * @throws BrokeRuleException An exception representing an illegal move
+     */
     private void executeAPlay() throws BrokeRuleException {
         resetPile();
         updatePlayers(true);
@@ -239,8 +266,12 @@ public class GameOfThrones extends CardGame {
         delay(watchingTime);
     }
 
+    /**
+     * Calls a player to play a card and then prints the appropriate status text and console message
+     * @param playerIndex An integer representing the player who is to play the card
+     * @throws BrokeRuleException An exception representing an illegal move
+     */
     private void playHeartCard(int playerIndex) throws BrokeRuleException {
-        int pileIndex;
         setStatusText("Player " + playerIndex + " select a Heart card to play");
 
         // currentPlayer chooses card, pile based on their in-class rules
@@ -260,6 +291,11 @@ public class GameOfThrones extends CardGame {
         updatePlayers(false);
     }
 
+    /**
+     * Calls a player to play a non-heart card and then prints the appropriate status text and console message
+     * @param playerIndex An integer representing the player who is to play the card
+     * @throws BrokeRuleException An exception representing an illegal move
+     */
     private void playNonHeartCard(int playerIndex) throws BrokeRuleException {
         setStatusText("Player" + playerIndex + " select a non-Heart card to play.");
 
@@ -281,6 +317,10 @@ public class GameOfThrones extends CardGame {
         updatePlayers(false);
     }
 
+    /**
+     * transfers the selected card from the hand it is in to the given pile index
+     * @param pileIndex the index of the pile that the card is transferred to
+     */
     private void transferCard(int pileIndex) {
         // Handle drawing / transfer logic
         selected.get().setVerso(false);
@@ -288,17 +328,18 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
     }
 
+    /**
+     * Method that checks each of the rules in the game are satisfied by the current piles (thus validating a move)
+     * @param card The card that is being checked to see if it is valid
+     * @param pileIndex The pile that the card resides in
+     * @throws BrokeRuleException An exception representing an illegal move
+     */
     public void validateMove(Optional<Card> card, int pileIndex) throws BrokeRuleException {
-//        check for character card being played as first card on both piles
-        if (!card.isPresent()){return;}
-        Suit cardSuit = (Suit) card.get().getSuit();
-        if (piles[pileIndex].getNumberOfCards() == 0 && !cardSuit.isCharacter()){
-            throw new BrokeRuleException("The first card played on each pile must be a character card");
+//      check for each rule added to the game
+        for (GameRule rule : rules) {
+            rule.isValid(card, piles[pileIndex]);
         }
-//        check for magic card being played on first card
-        if (piles[pileIndex].getNumberOfCards() == 1 && cardSuit.isMagic()){
-            throw new BrokeRuleException("A magic card cannot be played on a character card");
-        }
+
     }
 
     private void updatePlayers(boolean newRound){
@@ -381,6 +422,10 @@ public class GameOfThrones extends CardGame {
             String playerType = properties.getProperty("players." + i);
             playerList.add(playerFactory.getPlayer(playerType, i));
         }
+
+        RuleFactory ruleFactory = new RuleFactory();
+        rules.add(ruleFactory.getRule("FirstTwoCharacterRule"));
+        rules.add(ruleFactory.getRule("DiamondOnHeart"));
     }
 
     public static Random getRandom() {

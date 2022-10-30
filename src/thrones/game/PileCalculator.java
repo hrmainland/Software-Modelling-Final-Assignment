@@ -23,6 +23,7 @@ public class PileCalculator {
         return instance;
     }
 
+    // method that loops through and returns the pile ranks in an array
     public ArrayList<int[]> updatePileRanks(Hand[] piles) {
         ArrayList<int[]> allRanks = new ArrayList<>();
         for (int j = 0; j < piles.length; j++) {
@@ -73,11 +74,11 @@ public class PileCalculator {
                     defence -= rankValue;
                 }
             }
-            if (attack < 0) {
-                attack = 0;
-            } if (defence < 0) {
-                defence = 0;
-            }
+        }
+        if (attack < 0) {
+            attack = 0;
+        } if (defence < 0) {
+            defence = 0;
         }
         return new int[]{attack, defence};
     }
@@ -90,48 +91,7 @@ public class PileCalculator {
             return new int[]{attack,defence};
         } else {
             ArrayList<Card> cards = currentPile.getCardList();
-            Card card;
-            Card prevCard;
-            GameOfThrones.Suit prevSuit = null;
-            GameOfThrones.Suit suit;
-            int rankValue = 0;
-            int prevRankValue = 0;
-            for (int i=0; i<cards.size(); i++) {
-                if (i!=0) {
-                    prevCard = currentPile.get(i-1);
-                    prevSuit = ((GameOfThrones.Suit) prevCard.getSuit());
-                    prevRankValue = ((GameOfThrones.Rank) prevCard.getRank()).getRankValue();
-                }
-                card = currentPile.get(i);
-                rankValue = ((GameOfThrones.Rank) card.getRank()).getRankValue();
-                // If ranks are the same, double the effect.
-                rankValue = rankValue==prevRankValue ? 2*rankValue : rankValue;
-                suit = ((GameOfThrones.Suit) card.getSuit());
-                if (suit.isCharacter()) {
-                    attack += rankValue;
-                    defence += rankValue;
-                } else if (suit.isAttack()) {
-                    attack += rankValue;
-                } else if (suit.isDefence()) {
-                    defence += rankValue;
-                } else if (suit.isMagic()) {
-                    // Diamond should never be the bottom card
-                    assert(i!=0);
-                    // Diamond cannot be played after a heart
-                    assert(!prevSuit.isCharacter());
-                    if (prevSuit.isAttack()) {
-                        attack -= rankValue;
-                    } else {
-                        defence -= rankValue;
-                    }
-                }
-                if (attack < 0) {
-                    attack = 0;
-                } if (defence < 0) {
-                    defence = 0;
-                }
-            }
+            return pileRanksByList(cards);
         }
-        return new int[]{attack, defence};
     }
 }
