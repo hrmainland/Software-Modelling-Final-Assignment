@@ -198,7 +198,7 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
     }
 
-    private void executeAPlay() {
+    private void executeAPlay() throws BrokeRuleException {
         resetPile();
         updatePlayers(true);
 
@@ -239,7 +239,7 @@ public class GameOfThrones extends CardGame {
         delay(watchingTime);
     }
 
-    private void playHeartCard(int playerIndex) {
+    private void playHeartCard(int playerIndex) throws BrokeRuleException {
         int pileIndex;
         setStatusText("Player " + playerIndex + " select a Heart card to play");
 
@@ -247,6 +247,7 @@ public class GameOfThrones extends CardGame {
         Player currentPlayer = playerList.get(playerIndex);
         selected = currentPlayer.getBestCard();
         pileIndex = playerIndex % NUM_PILES;
+        validateMove(selected, pileIndex);
 
         // Print console message
         assert selected.isPresent() : " Pass returned on selection of character.";
@@ -259,7 +260,7 @@ public class GameOfThrones extends CardGame {
         updatePlayers(false);
     }
 
-    private void playNonHeartCard(int playerIndex){
+    private void playNonHeartCard(int playerIndex) throws BrokeRuleException {
         setStatusText("Player" + playerIndex + " select a non-Heart card to play.");
 
         // currentPlayer chooses card, pile based on their in-class rules
@@ -268,6 +269,7 @@ public class GameOfThrones extends CardGame {
 
         if (selected.isPresent()) {
             selectedPileIndex = currentPlayer.getPile();
+            validateMove(selected, selectedPileIndex);
             setStatusText("Selected: " + canonical(selected.get()) + ". Player" + playerIndex + " select a pile to play the card.");
             System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
             transferCard(selectedPileIndex);
@@ -286,6 +288,18 @@ public class GameOfThrones extends CardGame {
         rankUpdater(piles);
     }
 
+    public void validateMove(Optional<Card> card, int pileIndex) throws BrokeRuleException {
+//        check for heart being played as first card on both piles
+        if (!card.isPresent()){return;}
+        Suit cardSuit = (Suit) card.get().getSuit();
+        if (piles[pileIndex].getNumberOfCards() == 0 && !cardSuit.isCharacter()){
+            throw new BrokeRuleException("The first card played on each pile must be a character card");
+        }
+//        check for diamond being played on first card
+        if (piles[pileIndex].getNumberOfCards() == 1 && cardSuit.isMagic()){
+            throw new BrokeRuleException("A magic card cannot be played on a character card");
+        }
+    }
 
     private void updatePlayers(boolean newRound){
         for (int j=0; j<NUM_PLAYERS; j++) {
@@ -302,7 +316,7 @@ public class GameOfThrones extends CardGame {
         }
     }
 
-    public GameOfThrones() {
+    public GameOfThrones() throws BrokeRuleException {
         super(700, 700, 30);
 
         String version = "1.0";
@@ -330,7 +344,7 @@ public class GameOfThrones extends CardGame {
         refresh();
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException, BrokeRuleException {
         //System.out.println("Working Directory = " + System.getProperty("user.dir"));
         Properties properties;
 
