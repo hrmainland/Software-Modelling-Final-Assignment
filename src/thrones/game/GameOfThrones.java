@@ -246,15 +246,16 @@ public class GameOfThrones extends CardGame {
         // currentPlayer chooses card, pile based on their in-class rules
         Player currentPlayer = playerList.get(playerIndex);
         selected = currentPlayer.getBestCard();
-        pileIndex = playerIndex % NUM_PILES;
-        validateMove(selected, pileIndex);
+        selectedPileIndex = currentPlayer.getPile();
+//        pileIndex = playerIndex % NUM_PILES;
+        validateMove(selected, selectedPileIndex);
 
         // Print console message
         assert selected.isPresent() : " Pass returned on selection of character.";
-        System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + pileIndex);
+        System.out.println("Player " + playerIndex + " plays " + canonical(selected.get()) + " on pile " + selectedPileIndex);
 
         // Move card from hand to pile and draw
-        transferCard(pileIndex);
+        transferCard(selectedPileIndex);
 
         // Update the state of every player to reflect move change
         updatePlayers(false);
