@@ -27,11 +27,9 @@ public class SimplePlayer extends RandomPlayer{
 
             if ((cardSuit.isDefence() || cardSuit.isAttack()) && super.getPile() != myPile){
                 super.setBestCard(Optional.empty());
-                System.out.println("passing");
             }
             if (cardSuit.isMagic() && super.getPile() == myPile){
                 super.setBestCard(Optional.empty());
-                System.out.println("passing");
             }
         }
     }

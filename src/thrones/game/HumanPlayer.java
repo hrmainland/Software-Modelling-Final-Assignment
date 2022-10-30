@@ -10,13 +10,10 @@ public class HumanPlayer implements Player{
     private int pile = NON_SELECTION_VALUE;
     private Hand[] piles;
     private Hand hand;
-    private int playerIndex;
     private boolean firstTwoCards = true;
-    private boolean firstPass = true;
 
 
-    public HumanPlayer(int playerIndex) {
-        this.playerIndex = playerIndex;
+    public HumanPlayer() {
     }
 
     private void setupListener(Hand hand, Hand[] piles){
@@ -91,6 +88,13 @@ public class HumanPlayer implements Player{
 
     @Override
     public int getPile() {
+        if (bestCard.isPresent()) {
+            GameOfThrones.Suit bestCardSuit = (GameOfThrones.Suit) bestCard.get().getSuit();
+            if (bestCardSuit.isCharacter()) {
+                pile = playerIndex % 2;
+                return pile;
+            }
+        }
         pile = NON_SELECTION_VALUE;
         for (Hand pile : piles) {
             pile.setTouchEnabled(true);

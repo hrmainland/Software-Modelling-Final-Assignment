@@ -105,8 +105,6 @@ public class SmartPlayer implements Player {
         for (Card card : effectCards){
             myPile = cloneHandAsList(piles[playerIndex % 2]);
             oppPile = cloneHandAsList(piles[(playerIndex + 1)% 2]);
-//            myPile = piles[playerIndex % 2].getCardList();
-//            oppPile = piles[(playerIndex + 1)% 2].getCardList();
             GameOfThrones.Suit suit = (GameOfThrones.Suit) card.getSuit();
             assert (!suit.isCharacter()) : "Heart cards should not be considered for play";
             int pileIndex;
