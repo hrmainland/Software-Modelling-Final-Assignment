@@ -5,11 +5,11 @@ import ch.aplu.jcardgame.Hand;
 import java.util.Optional;
 
 /**
- * child class that extends the random player and contains all the logic
- * of simple player
+ * Player class that extends RandomPlayer and contains all the logic
+ * of simple player.
  */
 public class SimplePlayer extends RandomPlayer{
-    private int myPile;
+    private final int myPile;
 
     public SimplePlayer(int playerIndex) {
         super(playerIndex);

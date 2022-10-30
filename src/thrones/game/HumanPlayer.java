@@ -21,7 +21,11 @@ public class HumanPlayer implements Player{
         this.playerIndex = playerIndex;
     }
 
-    // mehtod that processes all the input from the user
+    /**
+     * Establishes the listeners such that a user is able to select cards
+     * @param hand
+     * @param piles
+     */
     private void setupListener(Hand hand, Hand[] piles){
         // Set up human player for interaction
         hand.addCardListener(new CardAdapter() {
@@ -47,7 +51,12 @@ public class HumanPlayer implements Player{
         }
     }
 
-    // method that resets the class
+    /**
+     * Aligns internal representation of hand and piles with current state of game
+     * @param hand
+     * @param piles
+     * @param newRound
+     */
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
         this.hand = hand;
@@ -58,7 +67,10 @@ public class HumanPlayer implements Player{
         firstTwoCards = getTotalCardsPlayed(piles) < 2;
     }
 
-    // logic behind selecting the card to play
+    /**
+     * Waits for user to select card or pass and returns choice
+     * @return best card given current game state
+     */
     @Override
     public Optional<Card> getBestCard() {
         if (hand.isEmpty()) {
@@ -74,7 +86,6 @@ public class HumanPlayer implements Player{
                 GameOfThrones.Suit suit = bestCard.isPresent() ? (GameOfThrones.Suit) bestCard.get().getSuit() : null;
                 if (firstTwoCards && suit != null && suit.isCharacter() ||         // If we want character, can't pass and suit must be right
                         !firstTwoCards && (suit == null || !suit.isCharacter())) { // If we don't want character, can pass or suit must not be character
-                    // if (suit != null && suit.isCharacter() == isCharacter) {
                     break;
                 } else {
                     bestCard = null;
@@ -86,7 +97,11 @@ public class HumanPlayer implements Player{
         return bestCard;
     }
 
-    // method that determines the total number of cards played
+    /**
+     * Returns total number of cards on current piles
+     * @param piles
+     * @return total no. of cards
+     */
     public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
@@ -95,7 +110,10 @@ public class HumanPlayer implements Player{
         return totalCardsPlayed;
     }
 
-    // method to return the pile that the human wants to add to
+    /**
+     * Waits for user to select pile and returns selection
+     * @return selected pile
+     */
     @Override
     public int getPile() {
         if (bestCard.isPresent()) {
