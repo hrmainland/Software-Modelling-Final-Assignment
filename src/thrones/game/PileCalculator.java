@@ -68,6 +68,12 @@ public class PileCalculator {
                 assert(i!=0);
                 // Diamond cannot be played after a heart
                 assert(!prevSuit.isCharacter());
+                int m = 2;
+                while(prevSuit.isMagic()){
+                    prevCard = cards.get(i-m);
+                    prevSuit = ((GameOfThrones.Suit) prevCard.getSuit());
+                    m += 1;
+                }
                 if (prevSuit.isAttack()) {
                     attack -= rankValue;
                 } else {
