@@ -23,8 +23,8 @@ public class HumanPlayer implements Player{
 
     /**
      * Establishes the listeners such that a user is able to select cards
-     * @param hand
-     * @param piles
+     * @param hand current hand
+     * @param piles current piles
      */
     private void setupListener(Hand hand, Hand[] piles){
         // Set up human player for interaction
@@ -53,9 +53,9 @@ public class HumanPlayer implements Player{
 
     /**
      * Aligns internal representation of hand and piles with current state of game
-     * @param hand
-     * @param piles
-     * @param newRound
+     * @param hand current hand
+     * @param piles current piles
+     * @param newRound true if start of new round, false otherwise
      */
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
@@ -99,7 +99,7 @@ public class HumanPlayer implements Player{
 
     /**
      * Returns total number of cards on current piles
-     * @param piles
+     * @param piles piles to be checked
      * @return total no. of cards
      */
     public int getTotalCardsPlayed(Hand[] piles){

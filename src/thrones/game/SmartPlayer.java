@@ -29,7 +29,12 @@ public class SmartPlayer implements Player {
         magicCardsPlayed = new ArrayList<Card>();
     }
 
-    // updates the smart player class
+    /**
+     * Driver code for updating best card and pile given the current state of the game.
+     * @param hand current hand
+     * @param piles current piles
+     * @param newRound true if start of new round, false otherwise
+     */
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        update magic cards played
@@ -47,7 +52,14 @@ public class SmartPlayer implements Player {
         setCardAndPile(hand, piles,totalCardsPlayed < 2);
     }
 
-    // logic that determines if the player can make an impact on the round outcome and makes that move
+    /**
+     * Responsible for checking if a heart must be played or if either of the two
+     * conditions for playing a card are met by any card. If any condition is met
+     * both the card and pile that should be played are updated.
+     * @param hand current hand
+     * @param piles current piles
+     * @param isCharacter true if a character card must be played, false otherwise
+     */
     private void setCardAndPile(Hand hand, Hand[] piles, boolean isCharacter){
 //        partition cards
         ArrayList<GameOfThrones.Suit> heartSuit = new ArrayList<>(Collections.singletonList(GameOfThrones.Suit.HEARTS));
@@ -100,6 +112,8 @@ public class SmartPlayer implements Player {
                 return;
             }
         }
+//        If the above condition is not met check if any card would win the game if it were to end now
+//        clone both the current piles
         ArrayList<Card> myPile = cloneHandAsList(piles[playerIndex % 2]);
         ArrayList<Card> oppPile = cloneHandAsList(piles[(playerIndex + 1)% 2]);
         boolean[] initialResults = attackDefenceResults(myPile, oppPile);
@@ -107,6 +121,7 @@ public class SmartPlayer implements Player {
             bestCard = Optional.empty();
             return;
         }
+//        for each effect card add it to the cloned pile and test if it would win the game as it stands
         for (Card card : effectCards){
             myPile = cloneHandAsList(piles[playerIndex % 2]);
             oppPile = cloneHandAsList(piles[(playerIndex + 1)% 2]);
@@ -124,6 +139,7 @@ public class SmartPlayer implements Player {
                 pileIndex = playerIndex % 2;
                 myPile.add(card);
             }
+//            store the current card and pile if playing it would win the game this turn
             boolean[] currentResults = attackDefenceResults(myPile, oppPile);
             if (!initialResults[ATTACK_WIN_INDEX] && currentResults[ATTACK_WIN_INDEX]
                     || !initialResults[DEFENCE_WIN_INDEX] && currentResults[DEFENCE_WIN_INDEX]){
@@ -135,7 +151,11 @@ public class SmartPlayer implements Player {
         bestCard = Optional.empty();
     }
 
-    // clones the hand into an arrayList
+    /**
+     * Clones the hand passed as an ArrayList
+     * @param hand hand to be cloned
+     * @return ArrayList with objects of type Card
+     */
     private ArrayList<Card> cloneHandAsList(Hand hand){
         ArrayList<Card> handClone = new ArrayList<>();
         for (Card card : hand.getCardList()){
@@ -155,7 +175,11 @@ public class SmartPlayer implements Player {
         return pile;
     }
 
-    // calculates the total cards played
+    /**
+     * Returns total number of cards on current piles
+     * @param piles
+     * @return total no. of cards
+     */
     public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
@@ -164,7 +188,12 @@ public class SmartPlayer implements Player {
         return totalCardsPlayed;
     }
 
-    // sorts the arrayList into it's different suits
+    /**
+     * Returns a subsection of the hand passed filtered by an ArrayList of suits passed as a parameter.
+     * @param hand hand to be filtered
+     * @param suits ArrayList of suits to be filtered by
+     * @return ArrayList of filtered cards
+     */
     private ArrayList<Card> getCardPartition(Hand hand, ArrayList<GameOfThrones.Suit> suits){
         ArrayList<Card> partition = new ArrayList<>();
         for (int i = 0; i < hand.getCardList().size(); i++) {
@@ -177,7 +206,12 @@ public class SmartPlayer implements Player {
         return partition;
     }
 
-    // uses the pileCalculator to determine the results of the game
+    /**
+     * Gets the result of both rounds of battle and returns these results as a boolean array
+     * @param myPile pile of player in question
+     * @param oppPile pile of opposition
+     * @return boolean array indicating success in the attack and defence phase
+     */
     private boolean[] attackDefenceResults(ArrayList<Card> myPile, ArrayList<Card> oppPile){
         int[] myResults = pileCalculator.pileRanksByList(myPile);
         int[] oppResults = pileCalculator.pileRanksByList(oppPile);
