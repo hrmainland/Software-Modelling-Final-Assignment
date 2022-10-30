@@ -16,6 +16,10 @@ public class PileCalculator {
     private PileCalculator() {
     }
 
+    /**
+     * Get instance - allows for singleton pattern
+     * @return single instance of PileCalculator
+     */
     public static PileCalculator getInstance() {
         if (instance == null) {
             instance = new PileCalculator();
@@ -24,7 +28,9 @@ public class PileCalculator {
     }
 
     /**
-     * method that loops through and returns the pile ranks in an array
+     * Converts piles to Array list of card ranks
+     * @param piles piles to be converted
+     * @return Array list containing array of each set of ranks
      */
     public ArrayList<int[]> updatePileRanks(Hand[] piles) {
         ArrayList<int[]> allRanks = new ArrayList<>();
@@ -36,7 +42,7 @@ public class PileCalculator {
     }
 
     /**
-     * loops through the cards given and determins the attack and defence rank
+     * loops through the cards given and determines the attack and defence rank
      * @param cards an arraylist of the cards in the pile
      * @return attack and defence ranks
      */
