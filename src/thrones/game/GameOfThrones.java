@@ -289,13 +289,13 @@ public class GameOfThrones extends CardGame {
     }
 
     public void validateMove(Optional<Card> card, int pileIndex) throws BrokeRuleException {
-//        check for heart being played as first card on both piles
+//        check for character card being played as first card on both piles
         if (!card.isPresent()){return;}
         Suit cardSuit = (Suit) card.get().getSuit();
         if (piles[pileIndex].getNumberOfCards() == 0 && !cardSuit.isCharacter()){
             throw new BrokeRuleException("The first card played on each pile must be a character card");
         }
-//        check for diamond being played on first card
+//        check for magic card being played on first card
         if (piles[pileIndex].getNumberOfCards() == 1 && cardSuit.isMagic()){
             throw new BrokeRuleException("A magic card cannot be played on a character card");
         }
