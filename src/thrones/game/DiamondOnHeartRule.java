@@ -13,9 +13,10 @@ public class DiamondOnHeartRule implements GameRule {
     }
 
     /**
-     * method from interface for checking the rules
-     * @param card passes the card being played
-     * @param pile passes the pile that is being passed to
+     * Checks to see if the current card-pile combination is valid given the rule represented.
+     * Throws BrokeRuleException if invalid
+     * @param card card in question
+     * @param pile pile in question
      * @throws BrokeRuleException
      */
     @Override

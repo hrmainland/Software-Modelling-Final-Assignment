@@ -19,7 +19,12 @@ public class RandomPlayer implements Player{
         this.playerIndex = playerIndex;
     }
 
-    // universal method to update what the player would do
+    /**
+     * Driver code for updating best card and pile given the current state of the game.
+     * @param hand current hand
+     * @param piles current piles
+     * @param newRound true if start of new round, false otherwise
+     */
     @Override
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
 //        play heart if one of first two cards
@@ -32,7 +37,11 @@ public class RandomPlayer implements Player{
         }
     }
 
-    // method to determine how many plays have been made
+    /**
+     * Returns total number of cards on current piles
+     * @param piles piles to be checked
+     * @return total no. of cards
+     */
     public int getTotalCardsPlayed(Hand[] piles){
         int totalCardsPlayed = 0;
         for (Hand pile: piles) {
@@ -59,7 +68,11 @@ public class RandomPlayer implements Player{
         this.bestCard = bestCard;
     }
 
-    // contains all the logic to get the card that the random player wants to play
+    /**
+     * Selects a random card (implementation consistent with original design)
+     * @param hand current hand
+     * @param isCharacter true if character must be played, false otherwise
+     */
     private void updateBestCard(Hand hand, boolean isCharacter) {
         List<Card> shortListCards = new ArrayList<>();
         for (int i = 0; i < hand.getCardList().size(); i++) {
@@ -79,6 +92,10 @@ public class RandomPlayer implements Player{
         }
     }
 
+    /**
+     * Sets the pile of the card to be played to a random pile
+     * @param totalCardsPlayed total number of cards played in the current round
+     */
     private void setPile(int totalCardsPlayed) {
         if (totalCardsPlayed < 2){
             pile = playerIndex % 2;
@@ -87,7 +104,10 @@ public class RandomPlayer implements Player{
         pile = GameOfThrones.getRandom().nextInt(2);
     }
 
-    // determines if we have a legal move
+    /**
+     * Determines if the current best card and pile violate any rule and nullifies the best card if so
+     * @param piles current piles
+     */
     private void validateMove(Hand[] piles){
         if (bestCard.isPresent()){
             ArrayList<Card> pileCards = piles[pile].getCardList();

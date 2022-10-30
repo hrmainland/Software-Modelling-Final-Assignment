@@ -5,18 +5,23 @@ import ch.aplu.jcardgame.Hand;
 import java.util.Optional;
 
 /**
- * child class that extends the random player and contains all the logic
- * of simple player
+ * Player class that extends RandomPlayer and contains all the logic
+ * of simple player.
  */
 public class SimplePlayer extends RandomPlayer{
-    private int myPile;
+    private final int myPile;
 
     public SimplePlayer(int playerIndex) {
         super(playerIndex);
         myPile = super.getPlayerIndex() % 2;
     }
 
-    // adds simple player logic
+    /**
+     * Driver code for updating best card and pile given the current state of the game.
+     * @param hand current hand
+     * @param piles current piles
+     * @param newRound true if start of new round, false otherwise
+     */
     public void updateState(Hand hand, Hand[] piles, boolean newRound) {
         super.updateState(hand, piles, newRound);
         if (super.getTotalCardsPlayed(piles) >=2) {
@@ -24,7 +29,9 @@ public class SimplePlayer extends RandomPlayer{
         }
     }
 
-    // function to calculate if the best move helps the opposition
+    /**
+     * Checks if the chosen move helps the opponent and nullifies the chosen card if so
+     */
     private void dontHelpOpponent(){
         if (super.getBestCard().isPresent()){
             GameOfThrones.Suit cardSuit = (GameOfThrones.Suit) super.getBestCard().get().getSuit();

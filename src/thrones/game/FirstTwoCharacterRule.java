@@ -10,9 +10,10 @@ import java.util.Optional;
  */
 public class FirstTwoCharacterRule implements GameRule{
     /**
-     * interface method for rule checking
-     * @param card card that is being played
-     * @param pile pile that is being played to
+     * Checks to see if the current card-pile combination is valid given the rule represented.
+     * Throws BrokeRuleException if invalid
+     * @param card card in question
+     * @param pile pile in question
      * @throws BrokeRuleException
      */
     @Override
