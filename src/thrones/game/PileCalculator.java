@@ -23,7 +23,9 @@ public class PileCalculator {
         return instance;
     }
 
-    // method that loops through and returns the pile ranks in an array
+    /**
+     * method that loops through and returns the pile ranks in an array
+     */
     public ArrayList<int[]> updatePileRanks(Hand[] piles) {
         ArrayList<int[]> allRanks = new ArrayList<>();
         for (int j = 0; j < piles.length; j++) {
@@ -33,6 +35,11 @@ public class PileCalculator {
         return allRanks;
     }
 
+    /**
+     * loops through the cards given and determins the attack and defence rank
+     * @param cards an arraylist of the cards in the pile
+     * @return attack and defence ranks
+     */
     public int[] pileRanksByList(ArrayList<Card> cards){
         int attack = 0;
         int defence = 0;
@@ -89,6 +96,12 @@ public class PileCalculator {
         return new int[]{attack, defence};
     }
 
+    /**
+     * calculates the pileRanks for the gameOfThrones class
+     * @param pileIndex which pile it wants calculated
+     * @param piles the piles from the game
+     * @return the attack and defence ranks of the pile
+     */
     public int[] calculatePileRanks(int pileIndex, Hand[] piles) {
         Hand currentPile = piles[pileIndex];
         int attack = 0;

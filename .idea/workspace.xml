@@ -4,9 +4,17 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="added commenting">
+    <list default="true" id="bc72c28b-5467-4e73-b697-1627d65b1357" name="Changes" comment="fixing diamond on diamond">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/BattleHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/DiamondOnHeartRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/DiamondOnHeartRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/FirstTwoCharacterRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/FirstTwoCharacterRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameOfThrones.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameRenderer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/GameRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/GameRule.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PileCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/PropertiesLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/PropertiesLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/thrones/game/RuleFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/thrones/game/RuleFactory.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +110,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667105475244</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fixing diamond on diamond">
+      <created>1667113372372</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1667113372372</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -120,6 +135,7 @@
     <MESSAGE value="fixed another issue with the starting with human" />
     <MESSAGE value="deleting unnessecary code" />
     <MESSAGE value="added commenting" />
-    <option name="LAST_COMMIT_MESSAGE" value="added commenting" />
+    <MESSAGE value="fixing diamond on diamond" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing diamond on diamond" />
   </component>
 </project>
