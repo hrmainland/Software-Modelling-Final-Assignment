@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public class SimplePlayer extends RandomPlayer{
     private int myPile;
+    //private final Hand[] default_pile = new Hand[1];
 
     public SimplePlayer(int playerIndex) {
         super(playerIndex);
@@ -26,11 +27,9 @@ public class SimplePlayer extends RandomPlayer{
 
             if ((cardSuit.isDefence() || cardSuit.isAttack()) && super.getPile() != myPile){
                 super.setBestCard(Optional.empty());
-                System.out.println("passing");
             }
             if (cardSuit.isMagic() && super.getPile() == myPile){
                 super.setBestCard(Optional.empty());
-                System.out.println("passing");
             }
         }
     }

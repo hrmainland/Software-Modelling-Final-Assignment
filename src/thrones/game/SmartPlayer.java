@@ -19,7 +19,7 @@ public class SmartPlayer implements Player {
     private Optional<Card> bestCard;
     private ArrayList<Card> magicCardsPlayed;
     private int pile;
-    private PileCalculator pileCalculator = new PileCalculator();
+    private PileCalculator pileCalculator = PileCalculator.getInstance();
 
     public SmartPlayer(int playerIndex) {
         this.playerIndex = playerIndex;
@@ -58,11 +58,12 @@ public class SmartPlayer implements Player {
 //        play heart if one of first two cards
         if (isCharacter){
             if (hearts.size() > 0) {
-                bestCard = Optional.of(hearts.get(GameOfThrones.random.nextInt(hearts.size())));
+                bestCard = Optional.of(hearts.get(GameOfThrones.getRandom().nextInt(hearts.size())));
                 pile = playerIndex % 2;
                 return;
             }
             bestCard = Optional.empty();
+            return;
         }
 //        check for attack/defence card with no matching diamond
 //        get all ranks currently in played magic cards
@@ -104,8 +105,6 @@ public class SmartPlayer implements Player {
         for (Card card : effectCards){
             myPile = cloneHandAsList(piles[playerIndex % 2]);
             oppPile = cloneHandAsList(piles[(playerIndex + 1)% 2]);
-//            myPile = piles[playerIndex % 2].getCardList();
-//            oppPile = piles[(playerIndex + 1)% 2].getCardList();
             GameOfThrones.Suit suit = (GameOfThrones.Suit) card.getSuit();
             assert (!suit.isCharacter()) : "Heart cards should not be considered for play";
             int pileIndex;

@@ -12,10 +12,15 @@ import java.util.ArrayList;
 
 public class PileCalculator {
     //toAdd:
-    private final int ATTACK_RANK_INDEX = 0;
-    private final int DEFENCE_RANK_INDEX = 1;
+    private static PileCalculator instance;
+    private PileCalculator() {
+    }
 
-    public PileCalculator() {
+    public static PileCalculator getInstance() {
+        if (instance == null) {
+            instance = new PileCalculator();
+        }
+        return instance;
     }
 
     public ArrayList<int[]> updatePileRanks(Hand[] piles) {
